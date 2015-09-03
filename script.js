@@ -25,8 +25,8 @@ function drawWorld() {
 }
 
 function generateCharacter() {
-	players.push(new Character(25, 75));
-	players.push(new Character(25, 675));
+	players.push(new Character(getRandomX(), getRandomY()));
+	players.push(new Character(getRandomX(), getRandomY()));
 }
 
 function generateSquare(count) {
@@ -36,7 +36,7 @@ function generateSquare(count) {
 }
 
 function clearCanvas() {
-	context.fillStyle = "#001634";
+	context.fillStyle = "#000000";
 	context.fillRect(0, 0, canvas.width, canvas.height);
 }
 
@@ -56,14 +56,17 @@ function drawGrid() {
 		context.strokeStyle = "rgba(200, 200, 200, 0.15)";
 		context.stroke();
 	}
+	context.fillStyle = "rgba(255, 255, 255, 0.10)";
+	context.fillRect(0, canvas.height-55, canvas.width, 25);
+	context.fillRect(0, 12, canvas.width, 25);
 }
 
 function getRandomX() {
-	return 50*randomBetween(1, 27);
+	return 50*randomBetween(2, 25)+25;
 }
 
 function getRandomY() {
-	return 50*randomBetween(1, 15);
+	return 50*randomBetween(1, 14)+25;
 }
 
 function randomBetween(min, max) {
@@ -81,10 +84,10 @@ function Square() {
 	this.update = function() {
 		if (!this.move) {
 			this.direction = randomBetween(1, 5);
-			if (this.x  <= 0) {this.direction = 2; };
+			if (this.x  <= 100) {this.direction = 2; };
 			if (this.x  >= canvas.width-100) {this.direction = 4; };
-			if (this.y  <= 0) {this.direction = 3; };
-			if (this.y  >= canvas.height-100) {this.direction = 1; };
+			if (this.y  <= 50) {this.direction = 3; };
+			if (this.y  >= canvas.height-50) {this.direction = 1; };
 			this.life = 50;
 			this.rad--;
 			this.x+=0.5;
@@ -113,15 +116,15 @@ function Square() {
 
 	this.draw = function() {
 		context.fillStyle = "rgba(255, 255, 255, 0.20)";
-		context.fillRect(this.x+25, this.y+25, this.rad, this.rad);
+		context.fillRect(this.x, this.y, this.rad, this.rad);
 
 		return this;
 	}	
 }
 
 function Character(x, y) {
-	this.x = x;
-	this.y = y;
+	this.x = x-20;
+	this.y = y-20;
 
 	this.update = function() {
 
@@ -131,12 +134,12 @@ function Character(x, y) {
 
 	this.draw = function(col) {
 		if (col == 1) {
-			context.fillStyle = "rgba(255, 0, 0, 0.50)";
-			context.fillRect(this.x-20, this.y-20, 40, 40);
+			context.fillStyle = "rgba(155, 0, 0, 0.50)";
+			context.fillRect(this.x, this.y, 40, 40);
 		};
 		if (col == 2) {
-			context.fillStyle = "rgba(0, 0, 255, 0.50)";
-			context.fillRect(this.x-20, this.y-20, 40, 40);
+			context.fillStyle = "rgba(0, 0, 155, 0.50)";
+			context.fillRect(this.x, this.y, 40, 40);
 		};
 		
 
