@@ -11,7 +11,7 @@ var goals = [];
 
 clearCanvas();
 generateCharacter();
-generateSquare(100);
+generateSquare(150);
 setInterval(drawWorld, 10);
 console.log(canvas.width);
 
@@ -23,13 +23,13 @@ function drawWorld() {
 	};
 	players[0].update().draw(1);
 	players[1].update().draw(2);
-	goals[0].update().draw();
+	// goals[0].update().draw();
 }
 
 function generateCharacter() {
 	players.push(new Character(25, getRandomY()));
 	players.push(new Character(1325, getRandomY()));
-	goals.push(new Goal());
+	// goals.push(new Goal());
 }
 
 function generateSquare(count) {
@@ -39,7 +39,7 @@ function generateSquare(count) {
 }
 
 function clearCanvas() {
-	context.fillStyle = "#003000";
+	context.fillStyle = "#555500";
 	context.fillRect(0, 0, canvas.width, canvas.height);
 }
 
@@ -192,7 +192,7 @@ function Goal() {
 	}
 
 	this.draw = function() {
-		context.fillStyle = "rgba(255, 255, 255, 1)";
+		context.fillStyle = "rgba(200, 200, 0, 0.35)";
 		context.fillRect(this.x, this.y, this.rad, this.rad);
 
 		return this;
