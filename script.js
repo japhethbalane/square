@@ -6,6 +6,7 @@ canvas.height = window.innerHeight;
 
 var squares = [];
 var players = [];
+var goals = [];
 
 
 clearCanvas();
@@ -20,13 +21,15 @@ function drawWorld() {
 	for (var i = 0; i < squares.length; i++) {
 		squares[i].update().draw();
 	};
-	players[0].draw(1);
-	players[1].draw(2);
+	players[0].update().draw(1);
+	players[1].update().draw(2);
+	goals[0].update().draw();
 }
 
 function generateCharacter() {
-	players.push(new Character(getRandomX(), getRandomY()));
-	players.push(new Character(getRandomX(), getRandomY()));
+	players.push(new Character(25, getRandomY()));
+	players.push(new Character(1325, getRandomY()));
+	goals.push(new Goal());
 }
 
 function generateSquare(count) {
@@ -36,7 +39,7 @@ function generateSquare(count) {
 }
 
 function clearCanvas() {
-	context.fillStyle = "#000000";
+	context.fillStyle = "#003000";
 	context.fillRect(0, 0, canvas.width, canvas.height);
 }
 
@@ -142,6 +145,55 @@ function Character(x, y) {
 			context.fillRect(this.x, this.y, 40, 40);
 		};
 		
+
+		return this;
+	}	
+}
+
+function Goal() {
+	this.x = 675;
+	this.y = getRandomY();
+	this.direction = randomBetween(1, 5);
+	this.move = true;
+	this.life = 50;
+	this.rad = 0;
+
+	this.update = function() {
+		if (!this.move) {
+			this.direction = randomBetween(1, 5);
+			if (this.x  <= 100) {this.direction = 2; };
+			if (this.x  >= canvas.width-100) {this.direction = 4; };
+			if (this.y  <= 50) {this.direction = 3; };
+			if (this.y  >= canvas.height-50) {this.direction = 1; };
+			this.life = 50;
+			this.rad--;
+			this.x+=0.5;
+			this.y+=0.5;
+			if (this.rad == 0) {
+				this.move = true;
+			};
+		};
+
+		if (this.move) {
+			if (this.direction == 1) {this.y--; };
+			if (this.direction == 2) {this.x++; };
+			if (this.direction == 3) {this.y++; };
+			if (this.direction == 4) {this.x--; };
+			this.life--;
+			this.rad++;
+			this.x-=0.5;
+			this.y-=0.5;
+			if (this.life <= 0) {
+				this.move = false;
+			};
+		};
+		
+		return this;
+	}
+
+	this.draw = function() {
+		context.fillStyle = "rgba(255, 255, 255, 1)";
+		context.fillRect(this.x, this.y, this.rad, this.rad);
 
 		return this;
 	}	
