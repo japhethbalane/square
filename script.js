@@ -11,9 +11,39 @@ var goals = [];
 
 clearCanvas();
 generateCharacter();
-generateSquare(150);
+generateSquare(100);
 setInterval(drawWorld, 10);
 console.log(canvas.width);
+
+
+window.addEventListener("keypress", function(e) {
+	if (e.keyCode == 119 && players[0].y > 100) {
+		players[0].y -= 50;
+	}
+	if (e.keyCode == 97 && players[0].x > 50) {
+		players[0].x -= 50;
+	}
+	if (e.keyCode == 115 && players[0].y < canvas.height - 150) {
+		players[0].y += 50;
+	}
+	if (e.keyCode == 100 && players[0].x < canvas.width - 100) {
+		players[0].x += 50;
+	}
+
+	if (e.keyCode == 105 && players[1].y > 100) {
+		players[1].y -= 50;
+	}
+	if (e.keyCode == 106 && players[1].x > 50) {
+		players[1].x -= 50;
+	}
+	if (e.keyCode == 107 && players[1].y < canvas.height - 150) {
+		players[1].y += 50;
+	}
+	if (e.keyCode == 108 && players[1].x < canvas.width - 100) {
+		players[1].x += 50;
+	}
+});
+
 
 function drawWorld() {
 	clearCanvas();
@@ -27,8 +57,10 @@ function drawWorld() {
 }
 
 function generateCharacter() {
-	players.push(new Character(25, getRandomY()));
-	players.push(new Character(1325, getRandomY()));
+	players.push(new Character(25, 25*15));
+	players.push(new Character(1325, 25*15));
+	// players.push(new Character(25, getRandomY()));
+	// players.push(new Character(1325, getRandomY()));
 	// goals.push(new Goal());
 }
 
