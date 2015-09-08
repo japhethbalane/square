@@ -7,11 +7,12 @@ canvas.height = window.innerHeight;
 var squares = [];
 var players = [];
 var goals = [];
-
+var scores = [];
 
 clearCanvas();
 generateCharacter();
-generateSquare(200);
+generateSquare(10);
+generateScore();
 setInterval(drawWorld, 20);
 console.log(canvas.width);
 
@@ -57,6 +58,8 @@ function drawWorld() {
 	};
 	players[0].update().draw(1);
 	players[1].update().draw(2);
+	scores[0].update().draw();
+	scores[1].update().draw();
 	// goals[0].update().draw();
 }
 
@@ -70,6 +73,11 @@ function generateSquare(count) {
 	for (var i = 0; i < count; i++) {
 		squares.push(new Square());
 	};
+}
+
+function generateScore() {
+	scores.push(new Score(0, 1));
+	scores.push(new Score(1350, -1));
 }
 
 function clearCanvas() {
@@ -184,7 +192,14 @@ function Character(x, y) {
 	this.y = y;
 
 	this.update = function() {
-
+		if (players[0].x > 1250) {
+			players[0].x = 0;
+			scores[0].length++;
+		};
+		if (players[1].x < 50) {
+			players[1].x = 1300;
+			scores[1].length++;
+		};
 
 		return this;
 	}
@@ -202,6 +217,37 @@ function Character(x, y) {
 
 		return this;
 	}	
+}
+
+function Score(x, type) {
+	this.x = x;
+	this.y = canvas.height-50;
+	this.length = 5;
+
+	this.update = function() {
+
+		if (this.length < 0) {
+			this.length = 0;
+		};
+
+		return this;
+	}
+
+	this.draw = function() {
+		if (type == 1) {
+			context.fillStyle = "rgba(155, 0, 0, 0.50)";
+			context.fillRect(this.x, this.y, 50*this.length*type, 15);
+		};
+		if (type == -1) {
+			context.fillStyle = "rgba(0, 0, 155, 0.50)";
+			context.fillRect(this.x, this.y, 50*this.length*type, 15);
+		};
+		context.fillStyle = "rgba(200, 200, 0, 0.50)";
+		context.fillRect(50*13, canvas.height-50, 50, 15);
+
+		return this;
+	}
+
 }
 
 // function Goal() {
