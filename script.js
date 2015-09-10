@@ -11,7 +11,7 @@ var scores = [];
 
 clearCanvas();
 generateCharacter();
-generateSquare(1);
+generateSquare(175);
 generateScore();
 setInterval(drawWorld, 20);
 console.log(canvas.width);
@@ -61,8 +61,9 @@ function drawWorld() {
 	scores[0].update().draw();
 	scores[1].update().draw();
 
-	console.log(scores[0].length);
-	console.log(scores[1].length);
+	context.fillStyle = "rgba(200, 200, 200, 0.70)";
+	context.fillRect(50*scores[0].length, scores[0].y1, 50, 15);
+	context.fillRect(50*scores[0].length, scores[0].y2, 50, 15);
 }
 
 function generateCharacter() {
@@ -136,9 +137,11 @@ function Square() {
 			this.hit = true;
 			if (i == 0) {
 				scores[0].length--;
+				scores[1].length++;
 			};
 			if (i == 1) {
 				scores[1].length--;
+				scores[0].length++;
 			};
 		};
 
@@ -205,12 +208,14 @@ function Character(x, y) {
 			players[0].goal = true;
 			players[0].x = 0;
 			players[0].y = getRandomY();
+			scores[1].length-=2;
 			scores[0].length+=2;
 		};
 		if (players[1].x < 50) {
 			players[1].goal = true;
 			players[1].x = 1300;
 			players[1].y = getRandomY();
+			scores[0].length-=2;
 			scores[1].length+=2;
 		};
 
@@ -236,23 +241,13 @@ function Score(x, type) {
 	this.x = x;
 	this.y1 = canvas.height-50;
 	this.y2 = 17;
-	this.length = 2;
+	this.length = 13;
 
 	this.update = function() {
-		if (scores[0].length + scores[1].length > Math.floor(canvas.width/50)) {
-			// if (players[0].goal) {
-				scores[0].length-=2;
-			// 	players[0].goal = false;
-			// };
-			// if (players[1].goal) {
-				scores[1].length-=2;
-			// 	players[1].goal = false;
-			// };
-		};
 		
-		if (this.length >= Math.floor(canvas.width/50)) {
-			scores[0].length = 2;
-			scores[1].length = 2;
+		if (this.length >= 28) {
+			scores[0].length = 13;
+			scores[1].length = 13;
 		};
 
 		if (this.length < 0) {
