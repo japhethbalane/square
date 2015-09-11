@@ -8,14 +8,23 @@ var squares = [];
 var players = [];
 var goals = [];
 var scores = [];
+var isPlay = false;
 
 clearCanvas();
-generateCharacter();
-generateSquare(175);
-generateScore();
 setInterval(drawWorld, 20);
-console.log(canvas.width);
 
+
+var mousePress = function(event) {
+    if (!isPlay) {
+        if (event.pageX < canvas.width && event.pageY < canvas.height) {
+            isPlay = true;
+			generateCharacter();
+			generateSquare(175);
+			generateScore();
+        };
+    };
+}
+canvas.addEventListener("click", mousePress);
 
 window.addEventListener("keypress", function(e) {
 	if (e.keyCode == 119 && players[0].y > 50) {
@@ -27,14 +36,14 @@ window.addEventListener("keypress", function(e) {
 	if (e.keyCode == 115 && players[0].y < canvas.height - 150) {
 		players[0].y += 50;
 	}
-	if (e.keyCode == 100 && players[0].x < canvas.width - 100) {
+	if (e.keyCode == 100 && players[0].x <= canvas.width - 50) {
 		players[0].x += 50;
 	}
 
 	if (e.keyCode == 105 && players[1].y > 50) {
 		players[1].y -= 50;
 	}
-	if (e.keyCode == 106 && players[1].x > 0) {
+	if (e.keyCode == 106 && players[1].x >= 0) {
 		players[1].x -= 50;
 	}
 	if (e.keyCode == 107 && players[1].y < canvas.height - 150) {
@@ -49,27 +58,35 @@ window.addEventListener("keypress", function(e) {
 function drawWorld() {
 	clearCanvas();
 	drawGrid();
-	for (var i = 0; i < squares.length; i++) {
-		squares[i].update(players[0].x, players[0].y, 0);
-		squares[i].update(players[1].x, players[1].y, 1);
+	if (!isPlay) {
+		drawGrid();
 	};
-	for (var i = 0; i < squares.length; i++) {
-		squares[i].draw();
-	};
-	players[0].update().draw(1);
-	players[1].update().draw(2);
-	scores[0].update().draw();
-	scores[1].update().draw();
+	if (isPlay) {
+		for (var i = 0; i < squares.length; i++) {
+			squares[i].update(players[0].x, players[0].y, 0);
+			squares[i].update(players[1].x, players[1].y, 1);
+		};
+		for (var i = 0; i < squares.length; i++) {
+			squares[i].draw();
+		};
+		players[0].update().draw(1);
+		players[1].update().draw(2);
+		scores[0].update().draw();
+		scores[1].update().draw();
 
-	context.fillStyle = "rgba(200, 200, 200, 0.70)";
-	context.fillRect(50*scores[0].length, scores[0].y1, 50, 15);
-	context.fillRect(50*scores[0].length, scores[0].y2, 50, 15);
+		context.fillStyle = "rgba(255, 255, 255, 0.10)";
+		context.fillRect(0, canvas.height-55, canvas.width, 25);
+		context.fillRect(0, 12, canvas.width, 25);
+
+		context.fillStyle = "rgba(200, 200, 200, 0.70)";
+		context.fillRect(50*scores[0].length, scores[0].y1, 50, 15);
+		context.fillRect(50*scores[0].length, scores[0].y2, 50, 15);
+	};
 }
 
 function generateCharacter() {
 	players.push(new Character(0, 50*7));
 	players.push(new Character(1300, 50*7));
-	// goals.push(new Goal());
 }
 
 function generateSquare(count) {
@@ -84,7 +101,7 @@ function generateScore() {
 }
 
 function clearCanvas() {
-	context.fillStyle = "#000000";
+	context.fillStyle = "#aaaaaa";
 	context.fillRect(0, 0, canvas.width, canvas.height);
 }
 
@@ -94,19 +111,16 @@ function drawGrid() {
 		context.beginPath();
 		context.moveTo(0, i*gap);
 		context.lineTo(canvas.width, i*gap);
-		context.strokeStyle = "rgba(200, 200, 200, 0.15)";
+		context.strokeStyle = "rgba(200, 200, 200, 0.30)";
 		context.stroke();
 	}
 	for(var i = 0; i*gap < canvas.width; i++){
 		context.beginPath();
 		context.moveTo(i*gap, 0);
 		context.lineTo(i*gap, canvas.height);
-		context.strokeStyle = "rgba(200, 200, 200, 0.15)";
+		context.strokeStyle = "rgba(200, 200, 200, 0.30)";
 		context.stroke();
 	}
-	context.fillStyle = "rgba(255, 255, 255, 0.10)";
-	context.fillRect(0, canvas.height-55, canvas.width, 25);
-	context.fillRect(0, 12, canvas.width, 25);
 }
 
 function getRandomX() {
@@ -201,18 +215,15 @@ function Square() {
 function Character(x, y) {
 	this.x = x;
 	this.y = y;
-	this.goal = false;
 
 	this.update = function() {
-		if (players[0].x > 1250) {
-			players[0].goal = true;
+		if (players[0].x > 1300) {
 			players[0].x = 0;
 			players[0].y = getRandomY();
 			scores[1].length-=2;
 			scores[0].length+=2;
 		};
-		if (players[1].x < 50) {
-			players[1].goal = true;
+		if (players[1].x < 0) {
 			players[1].x = 1300;
 			players[1].y = getRandomY();
 			scores[0].length-=2;
@@ -246,12 +257,10 @@ function Score(x, type) {
 	this.update = function() {
 		
 		if (this.length >= 28) {
-			scores[0].length = 13;
-			scores[1].length = 13;
-		};
-
-		if (this.length < 0) {
-			this.length = 0;
+            squares = [];
+			players = [];
+			scores = [];
+			isPlay = false;
 		};
 
 		return this;
