@@ -27,31 +27,32 @@ var mousePress = function(event) {
 canvas.addEventListener("click", mousePress);
 
 window.addEventListener("keypress", function(e) {
-	if (e.keyCode == 119 && players[0].y > 50) {
-		players[0].y -= 50;
-	}
-	if (e.keyCode == 97 && players[0].x > 0) {
-		players[0].x -= 50;
-	}
-	if (e.keyCode == 115 && players[0].y < canvas.height - 150) {
-		players[0].y += 50;
-	}
-	if (e.keyCode == 100 && players[0].x <= canvas.width - 50) {
-		players[0].x += 50;
-	}
-
-	if (e.keyCode == 105 && players[1].y > 50) {
-		players[1].y -= 50;
-	}
-	if (e.keyCode == 106 && players[1].x >= 0) {
-		players[1].x -= 50;
-	}
-	if (e.keyCode == 107 && players[1].y < canvas.height - 150) {
-		players[1].y += 50;
-	}
-	if (e.keyCode == 108 && players[1].x < canvas.width - 100) {
-		players[1].x += 50;
-	}
+	if (isPlay) {
+		if (e.keyCode == 119 && players[0].y > 50) {
+			players[0].y -= 50;
+		}
+		if (e.keyCode == 97 && players[0].x > 0) {
+			players[0].x -= 50;
+		}
+		if (e.keyCode == 115 && players[0].y < canvas.height - 150) {
+			players[0].y += 50;
+		}
+		if (e.keyCode == 100 && players[0].x <= canvas.width - 50) {
+			players[0].x += 50;
+		}
+		if (e.keyCode == 105 && players[1].y > 50) {
+			players[1].y -= 50;
+		}
+		if (e.keyCode == 106 && players[1].x >= 0) {
+			players[1].x -= 50;
+		}
+		if (e.keyCode == 107 && players[1].y < canvas.height - 150) {
+			players[1].y += 50;
+		}
+		if (e.keyCode == 108 && players[1].x < canvas.width - 100) {
+			players[1].x += 50;
+		}
+	};
 });
 
 
@@ -59,7 +60,7 @@ function drawWorld() {
 	clearCanvas();
 	drawGrid();
 	if (!isPlay) {
-		drawGrid();
+		drawSquare();
 	};
 	if (isPlay) {
 		for (var i = 0; i < squares.length; i++) {
@@ -82,6 +83,52 @@ function drawWorld() {
 		context.fillRect(50*scores[0].length, scores[0].y1, 50, 15);
 		context.fillRect(50*scores[0].length, scores[0].y2, 50, 15);
 	};
+}
+
+function drawSquare() {
+	drawGrid();
+	
+	context.beginPath();
+	context.moveTo(50*8-10, 50*7+10);
+	context.lineTo(50*7+10, 50*7+10);
+	context.lineTo(50*7+10, 50*7+25);
+	context.lineTo(50*8-10, 50*7+25);
+	context.lineTo(50*8-10, 50*7+40);
+	context.lineTo(50*7+10, 50*7+40);
+
+	context.moveTo(50*8, 50*7);
+	context.lineTo(50*9, 50*7);
+	context.lineTo(50*9, 50*8);
+	context.lineTo(50*8, 50*8);
+	context.lineTo(50*8, 50*7);
+	context.moveTo(50*8+35, 50*7+40);
+	context.lineTo(50*8+35, 50*8+10);
+
+	context.moveTo(50*9+10, 50*7+10);
+	context.lineTo(50*9+10, 50*7+40);
+	context.lineTo(50*9+40, 50*7+40);
+	context.lineTo(50*9+40, 50*7+10);
+
+	context.moveTo(50*10+10, 50*7+10);
+	context.lineTo(50*10+40, 50*7+10);
+	context.lineTo(50*10+40, 50*7+40);
+	context.lineTo(50*10+10, 50*7+40);
+	context.lineTo(50*10+10, 50*7+25);
+	context.lineTo(50*10+40, 50*7+25);
+
+	context.moveTo(50*11+10, 50*7+40);
+	context.lineTo(50*11+10, 50*7+10);
+	context.lineTo(50*11+40, 50*7+10);
+
+	context.moveTo(50*12+40, 50*7+40);
+	context.lineTo(50*12+10, 50*7+40);
+	context.lineTo(50*12+10, 50*7+10);
+	context.lineTo(50*12+40, 50*7+10);
+	context.lineTo(50*12+40, 50*7+25);
+	context.lineTo(50*12+10, 50*7+25);
+
+	context.strokeStyle = "#000000";
+	context.stroke();
 }
 
 function generateCharacter() {
