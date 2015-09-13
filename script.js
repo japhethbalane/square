@@ -9,18 +9,23 @@ var players = [];
 var goals = [];
 var scores = [];
 var isPlay = false;
+var win = false;
+var life = canvas.width;
+var col = 0;
+var ctr = 0;
 
 clearCanvas();
 setInterval(drawWorld, 20);
 
 
 var mousePress = function(event) {
-    if (!isPlay) {
+    if (!win && ctr < 3/* && !isPlay*/) {
         if (event.pageX < canvas.width && event.pageY < canvas.height) {
             isPlay = true;
 			generateCharacter();
-			generateSquare(175);
+			generateSquare(100);
 			generateScore();
+			ctr++;
         };
     };
 }
@@ -60,6 +65,9 @@ function drawWorld() {
 	clearCanvas();
 	drawGrid();
 	if (!isPlay) {
+		if (win) {
+			Winner(col);
+		};
 		drawSquare();
 	};
 	if (isPlay) {
@@ -180,6 +188,17 @@ function getRandomY() {
 
 function randomBetween(min, max) {
 	return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function Winner(col){
+	context.fillStyle = "rgba(0, 0, 0, 0.50)";
+	context.fillRect(0,0,life,canvas.height);
+	life-=10;
+	if (life <= 0) {
+		life = canvas.width;
+		// isPlay = false;
+		win = false;
+	};
 }
 
 function Square() {
@@ -303,11 +322,13 @@ function Score(x, type) {
 
 	this.update = function() {
 		
-		if (this.length >= 28) {
+		if (this.length >= 27) {
             squares = [];
 			players = [];
 			scores = [];
 			isPlay = false;
+			win = true;
+			ctr = 0;
 		};
 
 		return this;
