@@ -33,28 +33,28 @@ canvas.addEventListener("click", mousePress);
 
 window.addEventListener("keypress", function(e) {
 	if (isPlay) {
-		if (e.keyCode == 119 && players[0].y > 50) {
+		if (e.keyCode == 119 && players[0].y > 50 && players[0].y-50 != players[1].y) {
 			players[0].y -= 50;
 		}
-		if (e.keyCode == 97 && players[0].x > 0) {
+		if (e.keyCode == 97 && players[0].x > 0 && players[0].x-50 != players[1].x) {
 			players[0].x -= 50;
 		}
-		if (e.keyCode == 115 && players[0].y < canvas.height - 150) {
+		if (e.keyCode == 115 && players[0].y < canvas.height - 150 && players[0].y+50 != players[1].y) {
 			players[0].y += 50;
 		}
-		if (e.keyCode == 100 && players[0].x <= canvas.width - 50) {
+		if (e.keyCode == 100 && players[0].x <= canvas.width - 50 && players[0].x+50 != players[1].x) {
 			players[0].x += 50;
 		}
-		if (e.keyCode == 105 && players[1].y > 50) {
+		if (e.keyCode == 105 && players[1].y > 50 && players[1].y-50 != players[0].y) {
 			players[1].y -= 50;
 		}
-		if (e.keyCode == 106 && players[1].x >= 0) {
+		if (e.keyCode == 106 && players[1].x >= 0 && players[1].x-50 != players[0].x) {
 			players[1].x -= 50;
 		}
-		if (e.keyCode == 107 && players[1].y < canvas.height - 150) {
+		if (e.keyCode == 107 && players[1].y < canvas.height - 150 && players[1].y+50 != players[0].y) {
 			players[1].y += 50;
 		}
-		if (e.keyCode == 108 && players[1].x < canvas.width - 100) {
+		if (e.keyCode == 108 && players[1].x < canvas.width - 100 && players[1].x+50 != players[0].x) {
 			players[1].x += 50;
 		}
 	};
