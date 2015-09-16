@@ -11,21 +11,24 @@ var scores = [];
 var isPlay = false;
 var win = false;
 var life = canvas.width;
-var col = 0;
 var ctr = 0;
+var sqs = 100;
+var r = 0;
+var b = 0;
 
 clearCanvas();
 setInterval(drawWorld, 20);
 
 
 var mousePress = function(event) {
-    if (!win && ctr < 3/* && !isPlay*/) {
+    if (!win && ctr < 3) {
         if (event.pageX < canvas.width && event.pageY < canvas.height) {
             isPlay = true;
 			generateCharacter();
-			generateSquare(100);
+			generateSquare(sqs);
 			generateScore();
 			ctr++;
+			sqs/=2;
         };
     };
 }
@@ -90,7 +93,7 @@ function drawWorld() {
 	drawGrid();
 	if (!isPlay) {
 		if (win) {
-			Winner(col);
+			Winner();
 		};
 		drawSquare();
 	};
@@ -214,13 +217,12 @@ function randomBetween(min, max) {
 	return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function Winner(col){
-	context.fillStyle = "rgba(0, 0, 0, 0.50)";
-	context.fillRect(0,0,life,canvas.height);
+function Winner(){
+	context.fillStyle = "rgba("+r+", 0,"+b+", 0.50)";
+	context.fillRect(0,50*7,life,50);
 	life-=10;
 	if (life <= 0) {
 		life = canvas.width;
-		// isPlay = false;
 		win = false;
 	};
 }
@@ -260,7 +262,7 @@ function Square() {
 			// this.rad--;
 			// this.x+=0.5;
 			// this.y+=0.5;
-			if (this.life == 200) {
+			if (this.life == 150) {
 				this.life = 50;
 				this.move = true;
 			};
@@ -347,12 +349,19 @@ function Score(x, type) {
 	this.update = function() {
 		
 		if (this.length >= 27) {
+			if (scores[0].length >= 27) {
+				r = 155;
+			};
+			if (scores[1].length >= 27) {
+				b = 155;
+			};
             squares = [];
 			players = [];
 			scores = [];
 			isPlay = false;
 			win = true;
 			ctr = 0;
+			sqs = 100;
 		};
 
 		return this;
