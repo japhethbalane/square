@@ -29,6 +29,8 @@ var mousePress = function(event) {
 			generateScore();
 			ctr++;
 			sqs/=2;
+			r = 0;
+			b = 0;
         };
     };
 }
@@ -312,14 +314,14 @@ function Character(x, y) {
 		if (players[0].x > 1300) {
 			players[0].x = 0;
 			players[0].y = getRandomY();
-			scores[1].length-=2;
-			scores[0].length+=2;
+			scores[1].length-=ctr*2;
+			scores[0].length+=ctr*2;
 		};
 		if (players[1].x < 0) {
 			players[1].x = 1300;
 			players[1].y = getRandomY();
-			scores[0].length-=2;
-			scores[1].length+=2;
+			scores[0].length-=ctr*2;
+			scores[1].length+=ctr*2;
 		};
 
 		return this;
