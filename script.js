@@ -164,7 +164,7 @@ function drawSquare() {
 	context.lineTo(50*12+40, 50*7+25);
 	context.lineTo(50*12+10, 50*7+25);
 
-	context.strokeStyle = "#000000";
+	context.strokeStyle = "#ffffff";
 	context.stroke();
 }
 
@@ -185,7 +185,7 @@ function generateScore() {
 }
 
 function clearCanvas() {
-	context.fillStyle = "#aaaaaa";
+	context.fillStyle = "#000000";
 	context.fillRect(0, 0, canvas.width, canvas.height);
 }
 
