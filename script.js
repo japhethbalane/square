@@ -185,7 +185,7 @@ function generateScore() {
 }
 
 function clearCanvas() {
-	context.fillStyle = "#000000";
+	context.fillStyle = "#000";
 	context.fillRect(0, 0, canvas.width, canvas.height);
 }
 
@@ -195,14 +195,14 @@ function drawGrid() {
 		context.beginPath();
 		context.moveTo(0, i*gap);
 		context.lineTo(canvas.width, i*gap);
-		context.strokeStyle = "rgba(200, 200, 200, 0.30)";
+		context.strokeStyle = "rgba(200, 200, 200, 0.08)";
 		context.stroke();
 	}
 	for(var i = 0; i*gap < canvas.width; i++){
 		context.beginPath();
 		context.moveTo(i*gap, 0);
 		context.lineTo(i*gap, canvas.height);
-		context.strokeStyle = "rgba(200, 200, 200, 0.30)";
+		context.strokeStyle = "rgba(200, 200, 200, 0.08)";
 		context.stroke();
 	}
 }
