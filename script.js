@@ -16,7 +16,6 @@ var sqs = 100;
 var r = 0;
 var b = 0;
 
-clearCanvas();
 setInterval(drawWorld, 20);
 
 var mousePress = function(event) {
