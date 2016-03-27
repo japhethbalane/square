@@ -259,10 +259,6 @@ function Square() {
 			if (this.y  < 50) {this.direction = 3; };
 			if (this.y  > canvas.height-100) {this.direction = 1; };
 			this.life++;
-			// this.life = 50;
-			// this.rad--;
-			// this.x+=0.5;
-			// this.y+=0.5;
 			if (this.life == 150) {
 				this.life = 50;
 				this.move = true;
