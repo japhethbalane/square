@@ -335,7 +335,6 @@ function Character(x, y) {
 			context.fillStyle = "rgba(0, 0, 155, 0.50)";
 			context.fillRect(this.x, this.y, 50, 50);
 		};
-		
 
 		return this;
 	}	
