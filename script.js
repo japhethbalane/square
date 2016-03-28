@@ -19,7 +19,6 @@ var b = 0;
 clearCanvas();
 setInterval(drawWorld, 20);
 
-
 var mousePress = function(event) {
     if (!win && ctr < 3) {
         if (event.pageX < canvas.width && event.pageY < canvas.height) {
