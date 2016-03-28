@@ -185,7 +185,7 @@ function generateScore() {
 }
 
 function clearCanvas() {
-	context.fillStyle = "#000";
+	context.fillStyle = "#001634";
 	context.fillRect(0, 0, canvas.width, canvas.height);
 }
 
