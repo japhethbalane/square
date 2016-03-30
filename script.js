@@ -56,32 +56,44 @@ window.addEventListener("keypress", function(e) {
 				players[0].x-=50;
 			};
 		}
-		if (e.keyCode == 105 && players[1].y > 50) {
-			players[1].y -= 50;
-			if (players[0].y == players[1].y && players[0].x == players[1].x) {
-				players[1].y+=50;
-			};
-		}
-		if (e.keyCode == 106 && players[1].x >= 0) {
-			players[1].x -= 50;
-			if (players[0].y == players[1].y && players[0].x == players[1].x) {
-				players[1].x+=50;
-			};
-		}
-		if (e.keyCode == 107 && players[1].y < canvas.height - 150) {
-			players[1].y += 50;
-			if (players[0].y == players[1].y && players[0].x == players[1].x) {
-				players[1].y-=50;
-			};
-		}
-		if (e.keyCode == 108 && players[1].x < canvas.width - 100) {
-			players[1].x += 50;
-			if (players[0].y == players[1].y && players[0].x == players[1].x) {
-				players[1].x-=50;
-			};
-		}
 	};
 });
+
+document.onkeydown = checkKey;
+function checkKey(e) {
+
+    e = e || window.event;
+
+    if (e.keyCode == '38' && players[1].y > 50) {
+    	players[1].y -= 50;
+		if (players[0].y == players[1].y && players[0].x == players[1].x) {
+			players[1].y+=50;
+		};
+        // up arrow
+    }
+    else if (e.keyCode == '40' && players[1].y < canvas.height - 150) {
+    	players[1].y += 50;
+		if (players[0].y == players[1].y && players[0].x == players[1].x) {
+			players[1].y-=50;
+		};
+        // down arrow
+    }
+    else if (e.keyCode == '37' && players[1].x >= 0) {
+    	players[1].x -= 50;
+		if (players[0].y == players[1].y && players[0].x == players[1].x) {
+			players[1].x+=50;
+		};
+       // left arrow
+    }
+    else if (e.keyCode == '39' && players[1].x < canvas.width - 100) {
+		players[1].x += 50;
+		if (players[0].y == players[1].y && players[0].x == players[1].x) {
+			players[1].x-=50;
+		};
+       // right arrow
+    }
+
+}
 
 function drawWorld() {
 	clearCanvas();
