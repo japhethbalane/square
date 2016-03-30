@@ -12,27 +12,23 @@ var isPlay = false;
 var win = false;
 var life = canvas.width;
 var ctr = 0;
-var sqs = 100;
+var sqs = 50;
 var r = 0;
 var b = 0;
 
+generateScore();
 setInterval(drawWorld, 20);
 
 var mousePress = function(event) {
-    if (!win && ctr < 3) {
-        if (event.pageX < canvas.width && event.pageY < canvas.height) {
-            isPlay = true;
-			generateCharacter();
-			generateSquare(sqs);
-			generateScore();
-			ctr++;
-			sqs/=2;
-			r = 0;
-			b = 0;
-        };
+    if (!win && ctr < 4) {
+        isPlay = true;
+		generateCharacter();
+		generateSquare(sqs);
+		ctr++;
+		r = 0;
+		b = 0;
     };
-}
-canvas.addEventListener("click", mousePress);
+};canvas.addEventListener("click", mousePress);
 
 window.addEventListener("keypress", function(e) {
 	if (isPlay) {
@@ -87,7 +83,6 @@ window.addEventListener("keypress", function(e) {
 	};
 });
 
-
 function drawWorld() {
 	clearCanvas();
 	drawGrid();
@@ -95,7 +90,7 @@ function drawWorld() {
 		if (win) {
 			Winner();
 		};
-		drawSquare();
+		drawSquareLogo();
 	};
 	if (isPlay) {
 		for (var i = 0; i < squares.length; i++) {
@@ -120,7 +115,7 @@ function drawWorld() {
 	};
 }
 
-function drawSquare() {
+function drawSquareLogo() {
 	drawGrid();
 	
 	context.beginPath();
