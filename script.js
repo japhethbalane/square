@@ -1,3 +1,6 @@
+
+//////////////////////////////////////////////////////////////////////////////
+
 var canvas = document.getElementById("Square");
 var context = canvas.getContext("2d");
 
@@ -7,11 +10,29 @@ canvas.height = window.innerHeight;
 var squares = [];
 var players = [];
 var isPlaying = false;
+var squareSize = 50;
+var xborder = (canvas.width-(squareSize*(Math.floor(canvas.width/squareSize))))/2;
+var yborder = (canvas.height-(squareSize*(Math.floor(canvas.height/squareSize))))/2;
+
+
+//////////////////////////////////////////////////////////////////////////////
 
 setInterval(drawWorld, 20);
 
+generateSquare(100);
+
+//////////////////////////////////////////////////////////////////////////////
+
+function generateSquare(count) {
+	// for (var i = 0; i < count; i++) {
+	// 	squares.push(new Square());
+	// };
+}
+
 var mousePress = function(event) {
-    
+    if (!isPlaying) {
+    	isPlaying = true;
+    }
 };canvas.addEventListener("click", mousePress);
 
 window.addEventListener("keypress", function(e) {
@@ -50,6 +71,8 @@ function checkKey(e) {
     }
 }
 
+//////////////////////////////////////////////////////////////////////////////
+
 function drawWorld() {
 	clearCanvas();
 	drawGrid();
@@ -61,48 +84,58 @@ function drawWorld() {
 	};
 }
 
-function drawSquareLogo() {
-	context.beginPath();
-	context.moveTo(50*8-10, 50*7+10);
-	context.lineTo(50*7+10, 50*7+10);
-	context.lineTo(50*7+10, 50*7+25);
-	context.lineTo(50*8-10, 50*7+25);
-	context.lineTo(50*8-10, 50*7+40);
-	context.lineTo(50*7+10, 50*7+40);
-	context.moveTo(50*8, 50*7);
-	context.lineTo(50*9, 50*7);
-	context.lineTo(50*9, 50*8);
-	context.lineTo(50*8, 50*8);
-	context.lineTo(50*8, 50*7);
-	context.moveTo(50*8+35, 50*7+40);
-	context.lineTo(50*8+35, 50*8+10);
-	context.moveTo(50*9+10, 50*7+10);
-	context.lineTo(50*9+10, 50*7+40);
-	context.lineTo(50*9+40, 50*7+40);
-	context.lineTo(50*9+40, 50*7+10);
-	context.moveTo(50*10+10, 50*7+10);
-	context.lineTo(50*10+40, 50*7+10);
-	context.lineTo(50*10+40, 50*7+40);
-	context.lineTo(50*10+10, 50*7+40);
-	context.lineTo(50*10+10, 50*7+25);
-	context.lineTo(50*10+40, 50*7+25);
-	context.moveTo(50*11+10, 50*7+40);
-	context.lineTo(50*11+10, 50*7+10);
-	context.lineTo(50*11+40, 50*7+10);
-	context.moveTo(50*12+40, 50*7+40);
-	context.lineTo(50*12+10, 50*7+40);
-	context.lineTo(50*12+10, 50*7+10);
-	context.lineTo(50*12+40, 50*7+10);
-	context.lineTo(50*12+40, 50*7+25);
-	context.lineTo(50*12+10, 50*7+25);
-	context.strokeStyle = "#fff";
-	context.stroke();
-}
+//////////////////////////////////////////////////////////////////////////////
 
-function generateSquare(count) {
-	// for (var i = 0; i < count; i++) {
-	// 	squares.push(new Square());
-	// };
+function drawSquareLogo() {
+	var x = canvas.width/2;
+	var y = canvas.height/2 - squareSize/2;
+
+	context.beginPath();
+
+	context.moveTo(x-100-10, y+10);
+	context.lineTo(x-150+10, y+10);
+	context.lineTo(x-150+10, y+25);
+	context.lineTo(x-100-10, y+25);
+	context.lineTo(x-100-10, y+40);
+	context.lineTo(x-150+10, y+40);
+
+	context.moveTo(x-100, y);
+	context.lineTo(x-50, y);
+	context.lineTo(x-50, y+50);
+	context.lineTo(x-100, y+50);
+	context.lineTo(x-100, y);
+	context.moveTo(x-100+35, y+40);
+	context.lineTo(x-100+35, y+60);
+
+	context.moveTo(x-50+10, y+10);
+	context.lineTo(x-50+10, y+40);
+	context.lineTo(x-50+40, y+40);
+	context.lineTo(x-50+40, y+10);
+
+	context.moveTo(x+10, y+10);
+	context.lineTo(x+40, y+10);
+	context.lineTo(x+40, y+40);
+	context.lineTo(x+10, y+40);
+	context.lineTo(x+10, y+25);
+	context.lineTo(x+40, y+25);
+
+	context.moveTo(x+50+10, y+40);
+	context.lineTo(x+50+10, y+10);
+	context.lineTo(x+50+40, y+10);
+
+	context.moveTo(x+100+40, y+40);
+	context.lineTo(x+100+10, y+40);
+	context.lineTo(x+100+10, y+10);
+	context.lineTo(x+100+40, y+10);
+	context.lineTo(x+100+40, y+25);
+	context.lineTo(x+100+10, y+25);
+
+	context.strokeStyle = "#fff";
+	context.lineWidth = 5;
+	context.lineCap = "round";
+	context.stroke();
+
+	context.lineWidth = 1;
 }
 
 function clearCanvas() {
@@ -111,9 +144,41 @@ function clearCanvas() {
 }
 
 function drawGrid() {
-	
+
+	context.strokeStyle = "#666";
+
+	context.moveTo(xborder,yborder);
+	context.lineTo(canvas.width-xborder,yborder);
+	context.lineTo(canvas.width-xborder,canvas.height-yborder);
+	context.lineTo(xborder,canvas.height-yborder);
+	context.lineTo(xborder,yborder);
+	context.stroke();
+
+	for (var i = xborder+squareSize; i < canvas.width-xborder; i+=squareSize) {
+		context.beginPath();
+		context.moveTo(i,yborder);
+		context.lineTo(i,canvas.height-yborder);
+		context.stroke();
+	}
+
+	for (var i = yborder+squareSize; i < canvas.height-yborder; i+=squareSize) {
+		context.beginPath();
+		context.moveTo(xborder,i);
+		context.lineTo(canvas.width-xborder,i);
+		context.stroke();
+	}
 }
+
+//////////////////////////////////////////////////////////////////////////////
 
 function randomBetween(min, max) {
 	return Math.floor(Math.random() * (max - min)) + min;
 }
+
+//////////////////////////////////////////////////////////////////////////////
+
+function Square() {
+	
+}
+
+//////////////////////////////////////////////////////////////////////////////
