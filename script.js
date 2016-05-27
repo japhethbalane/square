@@ -18,7 +18,7 @@ var yborder = (canvas.height-(squareSize*(Math.floor(canvas.height/squareSize)))
 
 setInterval(drawWorld, 20);
 
-generateSquare(100);
+generateSquare(1000);
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -143,19 +143,19 @@ function clearCanvas() {
 	gradient = context.createRadialGradient(
 		canvas.width/2,canvas.height/2,5,canvas.width/2,canvas.height/2,800);
 	gradient.addColorStop(0,'#000');
-	gradient.addColorStop(0.1,"#000");
-	gradient.addColorStop(0.2,'#004');
-	gradient.addColorStop(0.35,'#000');
-	gradient.addColorStop(0.5,'#002');
-	gradient.addColorStop(0.75,'#000');
-	gradient.addColorStop(1,'#004');
+	// gradient.addColorStop(0.1,"#000");
+	// gradient.addColorStop(0.2,'#004');
+	// gradient.addColorStop(0.35,'#fff');
+	// gradient.addColorStop(0.5,'#002');
+	// gradient.addColorStop(0.75,'#000');
+	gradient.addColorStop(1,'#666');
 	context.fillStyle = gradient;
 	context.fillRect(0,0,canvas.width,canvas.height);
 }
 
 function drawGrid() {
 
-	context.strokeStyle = "#000";
+	context.strokeStyle = "rgba(0,0,0,0.2)";
 
 	context.moveTo(xborder,yborder);
 	context.lineTo(canvas.width-xborder,yborder);
@@ -188,11 +188,73 @@ function randomBetween(min, max) {
 //////////////////////////////////////////////////////////////////////////////
 
 function Square() {
-	this.x = squareSize*randomBetween(0,Math.floor(canvas.width/squareSize))+xborder;
+	this.x = squareSize*randomBetween(0+1,(Math.floor(canvas.width/squareSize)-1))+xborder;
 	this.y = squareSize*randomBetween(0,Math.floor(canvas.height/squareSize))+yborder;
 	this.dimention = squareSize-10;
+	this.stopTimer = 1;
+
+	this.isMoving = false;
+
+	this.UP;this.DOWN;this.LEFT;this.RIGHT;
+	this.UP = this.DOWN = this.LEFT = this.RIGHT = false;
 
 	this.update = function() {
+
+		if ((this.x - xborder)%squareSize == 0 && 
+			(this.y - yborder)%squareSize == 0) {
+			this.isMoving = false;
+			this.UP = this.DOWN = this.LEFT = this.RIGHT = false;
+		}
+
+		if (!this.isMoving) {
+			this.stopTimer--;
+		}
+		if (!this.isMoving && this.stopTimer <= 0) {
+			var decide = randomBetween(0,4);
+
+			if (this.y-5-squareSize < 0) {
+				decide = 1;
+			}
+			if (this.y-5+squareSize*2 >= canvas.height-yborder) {
+				decide = 0;
+			}
+			if (this.x-5-squareSize < xborder) {
+				decide = 3;
+			}
+			if (this.x-5+squareSize*2 >= canvas.width-xborder-squareSize) {
+				decide = 2;
+			}
+
+			if (decide == 0) {
+				this.UP = true;
+			}
+			else if (decide == 1) {
+				this.DOWN = true;
+			}
+			else if (decide == 2) {
+				this.LEFT = true;
+			}
+			else if (decide == 3) {
+				this.RIGHT = true;
+			}
+			this.isMoving = true;
+		}
+
+		if (this.isMoving) {
+			this.stopTimer = 10;
+			if (this.UP) {
+				this.y--;
+			}
+			else if (this.DOWN) {
+				this.y++;
+			}
+			else if (this.LEFT) {
+				this.x--;
+			}
+			else if (this.RIGHT) {
+				this.x++;
+			}
+		}
 		
 		return this;
 	}
