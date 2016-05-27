@@ -18,7 +18,7 @@ var yborder = (canvas.height-(squareSize*(Math.floor(canvas.height/squareSize)))
 
 setInterval(drawWorld, 20);
 
-generateSquare(1000);
+generateSquare(200);
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -143,11 +143,6 @@ function clearCanvas() {
 	gradient = context.createRadialGradient(
 		canvas.width/2,canvas.height/2,5,canvas.width/2,canvas.height/2,800);
 	gradient.addColorStop(0,'#000');
-	// gradient.addColorStop(0.1,"#000");
-	// gradient.addColorStop(0.2,'#004');
-	// gradient.addColorStop(0.35,'#fff');
-	// gradient.addColorStop(0.5,'#002');
-	// gradient.addColorStop(0.75,'#000');
 	gradient.addColorStop(1,'#666');
 	context.fillStyle = gradient;
 	context.fillRect(0,0,canvas.width,canvas.height);
@@ -265,6 +260,10 @@ function Square() {
 		context.fillRect(this.x+5,this.y+5,this.dimention,this.dimention);
 		context.fill();
 	}
+}
+
+function Player() {
+	
 }
 
 //////////////////////////////////////////////////////////////////////////////
