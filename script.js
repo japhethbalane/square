@@ -263,7 +263,19 @@ function Square() {
 }
 
 function Player() {
-	
+	this.x;
+	this.y;
+	this.color;
+
+	this.update = function() {
+
+		return this;
+	}
+
+	this.draw = function() {
+		
+	}
+
 }
 
 //////////////////////////////////////////////////////////////////////////////
