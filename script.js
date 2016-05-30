@@ -14,11 +14,14 @@ var squareSize = 50;
 var xborder = (canvas.width-(squareSize*(Math.floor(canvas.width/squareSize))))/2;
 var yborder = (canvas.height-(squareSize*(Math.floor(canvas.height/squareSize))))/2;
 
+var player1 = new Player(xborder);
+var player2 = new Player(xborder + squareSize*Math.floor(canvas.width/squareSize-1));
+
 //////////////////////////////////////////////////////////////////////////////
 
 setInterval(drawWorld, 20);
 
-generateSquare(200);
+generateSquare(100);
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -37,17 +40,18 @@ var mousePress = function(event) {
 window.addEventListener("keypress", function(e) {
 	if (isPlaying) {
 		if (e.keyCode == 119) {
-			
+
 		}
 		if (e.keyCode == 97) {
-			
+
 		}
 		if (e.keyCode == 115) {
-			
+
 		}
 		if (e.keyCode == 100) {
-			
+
 		}
+		console.log(e.keyCode);
 	};
 });
 
@@ -79,6 +83,9 @@ function drawWorld() {
 		drawSquareLogo();
 	};
 	if (isPlaying) {
+		player1.update().draw();
+		player2.update().draw();
+		console.log(player1.y);
 		for (var i = 0; i < squares.length; i++) {
 			squares[i].update().draw();
 		}
@@ -193,9 +200,22 @@ function Square() {
 	this.UP;this.DOWN;this.LEFT;this.RIGHT;
 	this.UP = this.DOWN = this.LEFT = this.RIGHT = false;
 
+	this.tri = function (a,b,c) {
+		var tri = randomBetween(0,3);
+		if (tri == 0) {
+			return a;
+		}
+		else if (tri == 1) {
+			return b;
+		}
+		else {
+			return c;
+		}
+	}
+
 	this.update = function() {
 
-		if ((this.x - xborder)%squareSize == 0 && 
+		if ((this.x - xborder)%squareSize == 0 &&
 			(this.y - yborder)%squareSize == 0) {
 			this.isMoving = false;
 			this.UP = this.DOWN = this.LEFT = this.RIGHT = false;
@@ -208,16 +228,22 @@ function Square() {
 			var decide = randomBetween(0,4);
 
 			if (this.y-5-squareSize < 0) {
-				decide = 1;
+				decide = this.tri(1,2,3);
+				if (this.x-5-squareSize < xborder || this.x-5+squareSize*2 >= canvas.width-xborder-squareSize) {
+					decide = 1;
+				}
 			}
-			if (this.y-5+squareSize*2 >= canvas.height-yborder) {
-				decide = 0;
+			else if (this.y-5+squareSize*2 >= canvas.height-yborder) {
+				decide = this.tri(0,2,3);
+				if (this.x-5-squareSize < xborder || this.x-5+squareSize*2 >= canvas.width-xborder-squareSize) {
+					decide = 0;
+				}
 			}
-			if (this.x-5-squareSize < xborder) {
-				decide = 3;
+			else if (this.x-5-squareSize < xborder) {
+				decide = this.tri(0,1,3);
 			}
-			if (this.x-5+squareSize*2 >= canvas.width-xborder-squareSize) {
-				decide = 2;
+			else if (this.x-5+squareSize*2 >= canvas.width-xborder-squareSize) {
+				decide = this.tri(0,1,2);
 			}
 
 			if (decide == 0) {
@@ -250,7 +276,7 @@ function Square() {
 				this.x++;
 			}
 		}
-		
+
 		return this;
 	}
 
@@ -262,10 +288,10 @@ function Square() {
 	}
 }
 
-function Player() {
-	this.x;
-	this.y;
-	this.color;
+function Player(x) {
+	this.x = x;
+	this.y = squareSize*Math.floor((canvas.height/squareSize)/2)+yborder;
+	this.dimention = squareSize-10;
 
 	this.update = function() {
 
@@ -273,7 +299,10 @@ function Player() {
 	}
 
 	this.draw = function() {
-		
+		context.beginPath();
+		context.fillStyle = "rgba(0,0,0,0.5)";
+		context.fillRect(this.x+5,this.y+5,this.dimention,this.dimention);
+		context.fill();
 	}
 
 }
