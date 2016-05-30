@@ -31,48 +31,50 @@ function generateSquare(count) {
 	};
 }
 
-var mousePress = function(event) {
+canvas.addEventListener("click", function() {
     if (!isPlaying) {
     	isPlaying = true;
     }
-};canvas.addEventListener("click", mousePress);
+});
 
 window.addEventListener("keypress", function(e) {
 	if (isPlaying) {
 		if (e.keyCode == 119) {
-
+			player1.moveUP();			
 		}
 		if (e.keyCode == 97) {
-
+			player1.moveDOWN();
 		}
 		if (e.keyCode == 115) {
-
+			player1.moveLEFT();
 		}
 		if (e.keyCode == 100) {
-
+			player1.moveRIGHT();
 		}
-		console.log(e.keyCode);
 	};
 });
 
-document.onkeydown = checkKey;
-function checkKey(e) {
-    if (isPlaying) {
-    	e = e || window.event;
-	    if (e.keyCode == '38') {
-	        // up arrow
-	    }
-	    else if (e.keyCode == '40') {
-	        // down arrow
-	    }
-	    else if (e.keyCode == '37') {
-	       // left arrow
-	    }
-	    else if (e.keyCode == '39') {
-	       // right arrow
-	    }
-    }
-}
+// document.onkeydown = function(e) {
+//     if (isPlaying) {
+//     	e = e || window.event;
+// 	    if (e.keyCode == '38') {
+// 	        // up arrow
+// 	        player2.moveUP();
+// 	    }
+// 	    else if (e.keyCode == '40') {
+// 	        // down arrow
+// 	        player2.moveDOWN();
+// 	    }
+// 	    else if (e.keyCode == '37') {
+// 	       	// left arrow
+// 	       	player2.moveLEFT();
+// 	    }
+// 	    else if (e.keyCode == '39') {
+// 	      	// right arrow
+// 	      	player2.moveRIGHT();
+// 	    }
+//     }
+// };
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -85,7 +87,6 @@ function drawWorld() {
 	if (isPlaying) {
 		player1.update().draw();
 		player2.update().draw();
-		console.log(player1.y);
 		for (var i = 0; i < squares.length; i++) {
 			squares[i].update().draw();
 		}
@@ -292,9 +293,55 @@ function Player(x) {
 	this.x = x;
 	this.y = squareSize*Math.floor((canvas.height/squareSize)/2)+yborder;
 	this.dimention = squareSize-10;
+	this.isUP = false;
+	this.isDOWN = false;
+	this.isLEFT = false;
+	this.isRIGHT = false;
+
+	this.moveUP = function() {
+		this.isUP = true;
+	}
+	this.moveDOWN = function() {
+		this.isDOWN = true;
+	}
+	this.moveLEFT = function() {
+		this.isLEFT = true;
+	}
+	this.moveRIGHT = function() {
+		this.isRIGHT = true;
+	}
+
+	this.move = function() {
+		if (this.UP) {
+			this.y-=5;
+			if ((this.y-yborder)%squareSize == 0) {
+				this.UP = false;
+			}
+		}
+		else if (this.DOWN) {
+			this.y+=5;
+			if ((this.y-yborder)%squareSize == 0) {
+				this.UP = false;
+			}
+		}
+		else if (this.LEFT) {
+			this.x-=5;
+			if ((this.x-xborder)%squareSize == 0) {
+				this.LEFT = false;
+			}
+		}
+		else if (this.RIGHT) {
+			this.x+=5;
+			if ((this.x-xborder)%squareSize == 0) {
+				this.RIGHT = false;
+			}
+		}
+	}
 
 	this.update = function() {
-
+		if (this.isUP || this.isDOWN || this.isLEFT || this.isRIGHT) {
+			this.move();
+		}
 		return this;
 	}
 
@@ -304,7 +351,6 @@ function Player(x) {
 		context.fillRect(this.x+5,this.y+5,this.dimention,this.dimention);
 		context.fill();
 	}
-
 }
 
 //////////////////////////////////////////////////////////////////////////////
