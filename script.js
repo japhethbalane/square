@@ -40,13 +40,13 @@ canvas.addEventListener("click", function() {
 window.addEventListener("keypress", function(e) {
 	if (isPlaying) {
 		if (e.keyCode == 119) {
-			player1.moveUP();			
+			player1.moveUP();		
 		}
 		if (e.keyCode == 97) {
-			player1.moveDOWN();
+			player1.moveLEFT();
 		}
 		if (e.keyCode == 115) {
-			player1.moveLEFT();
+			player1.moveDOWN();
 		}
 		if (e.keyCode == 100) {
 			player1.moveRIGHT();
@@ -54,27 +54,27 @@ window.addEventListener("keypress", function(e) {
 	};
 });
 
-// document.onkeydown = function(e) {
-//     if (isPlaying) {
-//     	e = e || window.event;
-// 	    if (e.keyCode == '38') {
-// 	        // up arrow
-// 	        player2.moveUP();
-// 	    }
-// 	    else if (e.keyCode == '40') {
-// 	        // down arrow
-// 	        player2.moveDOWN();
-// 	    }
-// 	    else if (e.keyCode == '37') {
-// 	       	// left arrow
-// 	       	player2.moveLEFT();
-// 	    }
-// 	    else if (e.keyCode == '39') {
-// 	      	// right arrow
-// 	      	player2.moveRIGHT();
-// 	    }
-//     }
-// };
+document.onkeydown = function(e) {
+    if (isPlaying) {
+    	e = e || window.event;
+	    if (e.keyCode == '38') {
+	        // up arrow
+	        player2.moveUP();
+	    }
+	    else if (e.keyCode == '40') {
+	        // down arrow
+	        player2.moveDOWN();
+	    }
+	    else if (e.keyCode == '37') {
+	       	// left arrow
+	       	player2.moveLEFT();
+	    }
+	    else if (e.keyCode == '39') {
+	      	// right arrow
+	      	player2.moveRIGHT();
+	    }
+    }
+};
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -91,6 +91,8 @@ function drawWorld() {
 			squares[i].update().draw();
 		}
 	};
+	// console.log(player1.isUP+" "+player1.isDOWN+" "+player1.isLEFT+" "+player1.isRIGHT);
+	// console.log(player2.isUP+" "+player2.isDOWN+" "+player2.isLEFT+" "+player2.isRIGHT);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -293,45 +295,66 @@ function Player(x) {
 	this.x = x;
 	this.y = squareSize*Math.floor((canvas.height/squareSize)/2)+yborder;
 	this.dimention = squareSize-10;
-	this.isUP = false;
-	this.isDOWN = false;
-	this.isLEFT = false;
-	this.isRIGHT = false;
+	this.speed = 5;
+	this.UP = false;
+	this.DOWN = false;
+	this.LEFT = false;
+	this.RIGHT = false;
 
 	this.moveUP = function() {
-		this.isUP = true;
+		if ((this.y-yborder)%squareSize == 0 && (this.x-xborder)%squareSize == 0) {
+			this.UP = true;
+			this.DOWN = false;
+			this.LEFT = false;
+			this.RIGHT = false;
+		}
 	}
 	this.moveDOWN = function() {
-		this.isDOWN = true;
+		if ((this.y-yborder)%squareSize == 0 && (this.x-xborder)%squareSize == 0) {
+			this.UP = false;
+			this.DOWN = true;
+			this.LEFT = false;
+			this.RIGHT = false;
+		}
 	}
 	this.moveLEFT = function() {
-		this.isLEFT = true;
+		if ((this.y-yborder)%squareSize == 0 && (this.x-xborder)%squareSize == 0) {
+			this.UP = false;
+			this.DOWN = false;
+			this.LEFT = true;
+			this.RIGHT = false;
+		}
 	}
 	this.moveRIGHT = function() {
-		this.isRIGHT = true;
+		if ((this.y-yborder)%squareSize == 0 && (this.x-xborder)%squareSize == 0) {
+			this.UP = false;
+			this.DOWN = false;
+			this.LEFT = false;
+			this.RIGHT = true;
+		}
 	}
 
 	this.move = function() {
 		if (this.UP) {
-			this.y-=5;
+			this.y-=this.speed;
 			if ((this.y-yborder)%squareSize == 0) {
 				this.UP = false;
 			}
 		}
 		else if (this.DOWN) {
-			this.y+=5;
+			this.y+=this.speed;
 			if ((this.y-yborder)%squareSize == 0) {
-				this.UP = false;
+				this.DOWN = false;
 			}
 		}
 		else if (this.LEFT) {
-			this.x-=5;
+			this.x-=this.speed;
 			if ((this.x-xborder)%squareSize == 0) {
 				this.LEFT = false;
 			}
 		}
 		else if (this.RIGHT) {
-			this.x+=5;
+			this.x+=this.speed;
 			if ((this.x-xborder)%squareSize == 0) {
 				this.RIGHT = false;
 			}
@@ -339,7 +362,7 @@ function Player(x) {
 	}
 
 	this.update = function() {
-		if (this.isUP || this.isDOWN || this.isLEFT || this.isRIGHT) {
+		if (this.UP || this.DOWN || this.LEFT || this.RIGHT) {
 			this.move();
 		}
 		return this;
