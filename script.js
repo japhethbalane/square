@@ -40,7 +40,7 @@ canvas.addEventListener("click", function() {
 window.addEventListener("keypress", function(e) {
 	if (isPlaying) {
 		if (e.keyCode == 119) {
-			player1.moveUP();		
+			player1.moveUP();
 		}
 		if (e.keyCode == 97) {
 			player1.moveLEFT();
@@ -58,19 +58,15 @@ document.onkeydown = function(e) {
     if (isPlaying) {
     	e = e || window.event;
 	    if (e.keyCode == '38') {
-	        // up arrow
 	        player2.moveUP();
 	    }
 	    else if (e.keyCode == '40') {
-	        // down arrow
 	        player2.moveDOWN();
 	    }
 	    else if (e.keyCode == '37') {
-	       	// left arrow
 	       	player2.moveLEFT();
 	    }
 	    else if (e.keyCode == '39') {
-	      	// right arrow
 	      	player2.moveRIGHT();
 	    }
     }
@@ -91,8 +87,6 @@ function drawWorld() {
 			squares[i].update().draw();
 		}
 	};
-	// console.log(player1.isUP+" "+player1.isDOWN+" "+player1.isLEFT+" "+player1.isRIGHT);
-	// console.log(player2.isUP+" "+player2.isDOWN+" "+player2.isLEFT+" "+player2.isRIGHT);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -295,14 +289,15 @@ function Player(x) {
 	this.x = x;
 	this.y = squareSize*Math.floor((canvas.height/squareSize)/2)+yborder;
 	this.dimention = squareSize-10;
-	this.speed = 5;
+	this.speed = 10;
 	this.UP = false;
 	this.DOWN = false;
 	this.LEFT = false;
 	this.RIGHT = false;
 
 	this.moveUP = function() {
-		if ((this.y-yborder)%squareSize == 0 && (this.x-xborder)%squareSize == 0) {
+		if ((this.y-yborder)%squareSize == 0 && (this.x-xborder)%squareSize == 0
+				&& this.y-yborder > 0) {
 			this.UP = true;
 			this.DOWN = false;
 			this.LEFT = false;
@@ -310,7 +305,8 @@ function Player(x) {
 		}
 	}
 	this.moveDOWN = function() {
-		if ((this.y-yborder)%squareSize == 0 && (this.x-xborder)%squareSize == 0) {
+		if ((this.y-yborder)%squareSize == 0 && (this.x-xborder)%squareSize == 0
+				&& this.y+yborder+squareSize < canvas.height) {
 			this.UP = false;
 			this.DOWN = true;
 			this.LEFT = false;
@@ -318,7 +314,8 @@ function Player(x) {
 		}
 	}
 	this.moveLEFT = function() {
-		if ((this.y-yborder)%squareSize == 0 && (this.x-xborder)%squareSize == 0) {
+		if ((this.y-yborder)%squareSize == 0 && (this.x-xborder)%squareSize == 0
+				&& this.x-xborder > 0) {
 			this.UP = false;
 			this.DOWN = false;
 			this.LEFT = true;
@@ -326,7 +323,8 @@ function Player(x) {
 		}
 	}
 	this.moveRIGHT = function() {
-		if ((this.y-yborder)%squareSize == 0 && (this.x-xborder)%squareSize == 0) {
+		if ((this.y-yborder)%squareSize == 0 && (this.x-xborder)%squareSize == 0
+				&& this.x+xborder+squareSize < canvas.width) {
 			this.UP = false;
 			this.DOWN = false;
 			this.LEFT = false;
