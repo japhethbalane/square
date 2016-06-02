@@ -14,8 +14,8 @@ var squareSize = 50;
 var xborder = (canvas.width-(squareSize*(Math.floor(canvas.width/squareSize))))/2;
 var yborder = (canvas.height-(squareSize*(Math.floor(canvas.height/squareSize))))/2;
 
-var player1 = new Player(xborder);
-var player2 = new Player(xborder + squareSize*Math.floor(canvas.width/squareSize-1));
+var player1 = new Player(xborder,"rgba(255,0,0,0.5)");
+var player2 = new Player(xborder + squareSize*Math.floor(canvas.width/squareSize-1),"rgba(0,0,255,0.5)");
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -285,11 +285,12 @@ function Square() {
 	}
 }
 
-function Player(x) {
+function Player(x,col) {
 	this.x = x;
 	this.y = squareSize*Math.floor((canvas.height/squareSize)/2)+yborder;
 	this.dimention = squareSize-10;
 	this.speed = 10;
+	this.color = col;
 	this.UP = false;
 	this.DOWN = false;
 	this.LEFT = false;
@@ -298,37 +299,25 @@ function Player(x) {
 	this.moveUP = function() {
 		if ((this.y-yborder)%squareSize == 0 && (this.x-xborder)%squareSize == 0
 				&& this.y-yborder > 0) {
-			this.UP = true;
-			this.DOWN = false;
-			this.LEFT = false;
-			this.RIGHT = false;
+			this.UP = true;this.DOWN = false;this.LEFT = false;this.RIGHT = false;
 		}
 	}
 	this.moveDOWN = function() {
 		if ((this.y-yborder)%squareSize == 0 && (this.x-xborder)%squareSize == 0
 				&& this.y+yborder+squareSize < canvas.height) {
-			this.UP = false;
-			this.DOWN = true;
-			this.LEFT = false;
-			this.RIGHT = false;
+			this.UP = false;this.DOWN = true;this.LEFT = false;this.RIGHT = false;
 		}
 	}
 	this.moveLEFT = function() {
 		if ((this.y-yborder)%squareSize == 0 && (this.x-xborder)%squareSize == 0
 				&& this.x-xborder > 0) {
-			this.UP = false;
-			this.DOWN = false;
-			this.LEFT = true;
-			this.RIGHT = false;
+			this.UP = false;this.DOWN = false;this.LEFT = true;this.RIGHT = false;
 		}
 	}
 	this.moveRIGHT = function() {
 		if ((this.y-yborder)%squareSize == 0 && (this.x-xborder)%squareSize == 0
 				&& this.x+xborder+squareSize < canvas.width) {
-			this.UP = false;
-			this.DOWN = false;
-			this.LEFT = false;
-			this.RIGHT = true;
+			this.UP = false;this.DOWN = false;this.LEFT = false;this.RIGHT = true;
 		}
 	}
 
@@ -368,7 +357,7 @@ function Player(x) {
 
 	this.draw = function() {
 		context.beginPath();
-		context.fillStyle = "rgba(0,0,0,0.5)";
+		context.fillStyle = this.color;
 		context.fillRect(this.x+5,this.y+5,this.dimention,this.dimention);
 		context.fill();
 	}
