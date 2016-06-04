@@ -190,7 +190,7 @@ function Square() {
 	this.x = squareSize*randomBetween(0+1,(Math.floor(canvas.width/squareSize)-1))+xborder;
 	this.y = squareSize*randomBetween(0,Math.floor(canvas.height/squareSize))+yborder;
 	this.dimention = squareSize-10;
-	this.stopTimer = 1;
+	this.stopTimer = 0;
 
 	this.isMoving = false;
 
@@ -259,7 +259,7 @@ function Square() {
 		}
 
 		if (this.isMoving) {
-			this.stopTimer = 10;
+			this.stopTimer = 0;
 			if (this.UP) {
 				this.y--;
 			}
