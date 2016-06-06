@@ -16,6 +16,10 @@ var yborder = (canvas.height-(squareSize*(Math.floor(canvas.height/squareSize)))
 
 var player1 = new Player(xborder,"rgba(255,0,0,0.5)");
 var player2 = new Player(xborder + squareSize*Math.floor(canvas.width/squareSize-1),"rgba(0,0,255,0.5)");
+var p1gradient;
+var p2gradient;
+
+var BlackHole = 300;
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -29,6 +33,20 @@ function generateSquare(count) {
 	for (var i = 0; i < count; i++) {
 		squares.push(new Square());
 	};
+}
+
+function generateGradientsAura() {
+	p1gradient = context.createRadialGradient(
+		player1.x+squareSize/2,player1.y+squareSize/2,5,player1.x+squareSize/2,player1.y+squareSize/2,player1.aura);
+	p1gradient.addColorStop(0,"rgba(255,255,255,0.5)");
+	p1gradient.addColorStop(0.5,"rgba(255,150,150,0.5)");
+	p1gradient.addColorStop(1,"rgba(100,0,0,0.01)");
+
+	p2gradient = context.createRadialGradient(
+		player2.x+squareSize/2,player2.y+squareSize/2,5,player2.x+squareSize/2,player2.y+squareSize/2,player2.aura);
+	p2gradient.addColorStop(0,"rgba(255,255,255,0.5)");
+	p2gradient.addColorStop(0.5,"rgba(150,150,255,0.5)");
+	p2gradient.addColorStop(1,"rgba(0,0,100,0.01)");
 }
 
 canvas.addEventListener("click", function() {
@@ -81,8 +99,10 @@ function drawWorld() {
 		drawSquareLogo();
 	};
 	if (isPlaying) {
-		player1.drawAura();
-		player2.drawAura();
+		generateGradientsAura();
+		BlackHole += 1;
+		player1.drawAura(p1gradient);
+		player2.drawAura(p2gradient);
 		player1.update().draw();
 		player2.update().draw();
 		for (var i = 0; i < squares.length; i++) {
@@ -146,12 +166,12 @@ function drawSquareLogo() {
 }
 
 function clearCanvas() {
-	// gradient = context.createLinearGradient(0,0,canvas.width,0)
+	// gradient = context.createLinearGradient(0,0,canvas.width,0);
 	// gradient.addColorStop(0,'#211');
 	// gradient.addColorStop(0.5,'#000');
 	// gradient.addColorStop(1,'#112');
 	gradient = context.createRadialGradient(
-		canvas.width/2,canvas.height/2,5,canvas.width/2,canvas.height/2,800);
+		canvas.width/2,canvas.height/2,5,canvas.width/2,canvas.height/2,BlackHole);
 	gradient.addColorStop(0,'#000');
 	gradient.addColorStop(1,'#666');
 	context.fillStyle = gradient;
@@ -160,7 +180,7 @@ function clearCanvas() {
 
 function drawGrid() {
 
-	context.strokeStyle = "rgba(0,0,0,0.2)";
+	context.strokeStyle = "rgba(0,0,0,1)";
 
 	context.moveTo(xborder,yborder);
 	context.lineTo(canvas.width-xborder,yborder);
@@ -369,14 +389,9 @@ function Player(x,col) {
 		return this;
 	}
 
-	this.drawAura = function() {
+	this.drawAura = function(grad) {
 		context.beginPath();
-		if (player1 == this) {
-			context.fillStyle = "rgba(255,150,150,0.1)";
-		}
-		else {
-			context.fillStyle = "rgba(150,150,255,0.1)";
-		}
+		context.fillStyle = grad
 		context.arc(this.x+squareSize/2,this.y+squareSize/2,this.aura,Math.PI*2,false);
 		context.fill();
 	}
