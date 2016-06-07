@@ -197,6 +197,8 @@ function Square() {
 	this.UP;this.DOWN;this.LEFT;this.RIGHT;
 	this.UP = this.DOWN = this.LEFT = this.RIGHT = false;
 
+	this.core = 15;
+
 	this.tri = function (a,b,c) {
 		var tri = randomBetween(0,3);
 		if (tri == 0) {
@@ -279,8 +281,11 @@ function Square() {
 
 	this.draw = function() {
 		context.beginPath();
-		context.fillStyle = "rgba(255,255,255,0.3)";
+		context.fillStyle = "rgba(0,0,0,0.5)";
 		context.fillRect(this.x+5,this.y+5,this.dimention,this.dimention);
+		context.fill();
+		context.beginPath();
+		context.arc(this.x+squareSize/2,this.y+squareSize/2,this.core,Math.PI*2,false);
 		context.fill();
 	}
 }
@@ -289,12 +294,14 @@ function Player(x,col) {
 	this.x = x;
 	this.y = squareSize*Math.floor((canvas.height/squareSize)/2)+yborder;
 	this.dimention = squareSize-10;
-	this.speed = 10;
+	this.speed = 25;
 	this.color = col;
 	this.UP = false;
 	this.DOWN = false;
 	this.LEFT = false;
 	this.RIGHT = false;
+
+	this.core = 15;
 
 	this.moveUP = function() {
 		if ((this.y-yborder)%squareSize == 0 && (this.x-xborder)%squareSize == 0
@@ -359,6 +366,9 @@ function Player(x,col) {
 		context.beginPath();
 		context.fillStyle = this.color;
 		context.fillRect(this.x+5,this.y+5,this.dimention,this.dimention);
+		context.fill();
+		context.beginPath();
+		context.arc(this.x+squareSize/2,this.y+squareSize/2,this.core,Math.PI*2,false);
 		context.fill();
 	}
 }
