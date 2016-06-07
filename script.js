@@ -81,6 +81,8 @@ function drawWorld() {
 		drawSquareLogo();
 	};
 	if (isPlaying) {
+		player1.drawAura();
+		player2.drawAura();
 		player1.update().draw();
 		player2.update().draw();
 		for (var i = 0; i < squares.length; i++) {
@@ -144,6 +146,10 @@ function drawSquareLogo() {
 }
 
 function clearCanvas() {
+	// gradient = context.createLinearGradient(0,0,canvas.width,0)
+	// gradient.addColorStop(0,'#211');
+	// gradient.addColorStop(0.5,'#000');
+	// gradient.addColorStop(1,'#112');
 	gradient = context.createRadialGradient(
 		canvas.width/2,canvas.height/2,5,canvas.width/2,canvas.height/2,800);
 	gradient.addColorStop(0,'#000');
@@ -302,6 +308,7 @@ function Player(x,col) {
 	this.RIGHT = false;
 
 	this.core = 15;
+	this.aura = 300;
 
 	this.moveUP = function() {
 		if ((this.y-yborder)%squareSize == 0 && (this.x-xborder)%squareSize == 0
@@ -362,14 +369,30 @@ function Player(x,col) {
 		return this;
 	}
 
+	this.drawAura = function() {
+		context.beginPath();
+		if (player1 == this) {
+			context.fillStyle = "rgba(255,150,150,0.1)";
+		}
+		else {
+			context.fillStyle = "rgba(150,150,255,0.1)";
+		}
+		context.arc(this.x+squareSize/2,this.y+squareSize/2,this.aura,Math.PI*2,false);
+		context.fill();
+	}
+
+	this.drawCore = function() {
+		context.beginPath();
+		context.arc(this.x+squareSize/2,this.y+squareSize/2,this.core,Math.PI*2,false);
+		context.fill();
+	}
+
 	this.draw = function() {
 		context.beginPath();
 		context.fillStyle = this.color;
 		context.fillRect(this.x+5,this.y+5,this.dimention,this.dimention);
 		context.fill();
-		context.beginPath();
-		context.arc(this.x+squareSize/2,this.y+squareSize/2,this.core,Math.PI*2,false);
-		context.fill();
+		this.drawCore();
 	}
 }
 
