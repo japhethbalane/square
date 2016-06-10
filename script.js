@@ -14,8 +14,8 @@ var squareSize = 50;
 var xborder = (canvas.width-(squareSize*(Math.floor(canvas.width/squareSize))))/2;
 var yborder = (canvas.height-(squareSize*(Math.floor(canvas.height/squareSize))))/2;
 
-var player1 = new Player(xborder,"rgba(255,0,0,0.8)");
-var player2 = new Player(xborder + squareSize*Math.floor(canvas.width/squareSize-1),"rgba(0,0,255,0.8)");
+var player1 = new Player(xborder,"rgba(255,0,0,0.3)");
+var player2 = new Player(xborder + squareSize*Math.floor(canvas.width/squareSize-1),"rgba(0,0,255,0.3)");
 var p1gradient;
 var p2gradient;
 
@@ -37,13 +37,16 @@ function generateSquare(count) {
 
 function generateGradientsAura() {
 	p1gradient = context.createRadialGradient(
-		player1.x+squareSize/2,player1.y+squareSize/2,5,player1.x+squareSize/2,player1.y+squareSize/2,300);
+		player1.x+squareSize/2,player1.y+squareSize/2,5,
+		player1.x+squareSize/2,player1.y+squareSize/2,
+		player1.aura.size);
 	p1gradient.addColorStop(0,"rgba(255,255,255,0.5)");
 	p1gradient.addColorStop(0.5,"rgba(255,150,150,0.5)");
 	p1gradient.addColorStop(1,"rgba(100,100,100,0.01)");
 
 	p2gradient = context.createRadialGradient(
-		player2.x+squareSize/2,player2.y+squareSize/2,5,player2.x+squareSize/2,player2.y+squareSize/2,300);
+		player2.x+squareSize/2,player2.y+squareSize/2,5,player2.x+squareSize/2,player2.y+squareSize/2,
+		player2.aura.size);
 	p2gradient.addColorStop(0,"rgba(255,255,255,0.5)");
 	p2gradient.addColorStop(0.5,"rgba(150,150,255,0.5)");
 	p2gradient.addColorStop(1,"rgba(100,100,100,0.01)");
@@ -100,7 +103,7 @@ function drawWorld() {
 	};
 	if (isPlaying) {
 		generateGradientsAura();
-		BlackHole += 10;
+		BlackHole += 1;
 		player1.update().draw();
 		player2.update().draw();
 		for (var i = 0; i < squares.length; i++) {
@@ -309,12 +312,19 @@ function Square() {
 	}
 }
 
-function Aura(player, col) {
+function Aura(player) {
 	this.player = player;
 	this.x = this.player.x;
 	this.y = this.player.y;
-	this.gradient = col;
-	this.aura = 300;
+	this.size = 100;
+	this.gradient = "green";
+
+	if (this.player == player1) {
+		this.gradient = p1gradient;
+	}
+	else if (this.player == player1) {
+		this.gradient = p2gradient;
+	}
 
 	this.update = function() {
 		if (this.player.x > this.x) {
@@ -335,8 +345,8 @@ function Aura(player, col) {
 
 	this.draw = function() {
 		context.beginPath();
-		context.fillStyle = this.grad;
-		context.arc(this.x+squareSize/2,this.y+squareSize/2,this.aura,Math.PI*2,false);
+		context.fillStyle = this.gradient;
+		context.arc(this.x+squareSize/2,this.y+squareSize/2,this.size,Math.PI*2,false);
 		context.fill();
 	}
 }
@@ -350,7 +360,7 @@ function Player(x,col) {
 	this.DOWN = false;
 	this.LEFT = false;
 	this.RIGHT = false;
-	this.aura = new Aura(this,col);
+	this.aura = new Aura(this);
 
 	this.moveUP = function() {
 		if ((this.y-yborder)%squareSize == 0 && (this.x-xborder)%squareSize == 0
