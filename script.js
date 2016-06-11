@@ -316,15 +316,8 @@ function Aura(player) {
 	this.player = player;
 	this.x = this.player.x;
 	this.y = this.player.y;
-	this.size = 100;
+	this.size = 300;
 	this.gradient = "green";
-
-	if (this.player == player1) {
-		this.gradient = p1gradient;
-	}
-	else if (this.player == player1) {
-		this.gradient = p2gradient;
-	}
 
 	this.update = function() {
 		if (this.player.x > this.x) {
@@ -338,6 +331,13 @@ function Aura(player) {
 		}
 		if (this.player.y < this.y) {
 			this.y--;
+		}
+
+		if (this.player == player1) {
+			this.gradient = p1gradient;
+		}
+		else if (this.player == player2) {
+			this.gradient = p2gradient;
 		}
 
 		return this;
