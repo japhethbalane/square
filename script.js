@@ -37,15 +37,16 @@ function generateSquare(count) {
 
 function generateGradientsAura() {
 	p1gradient = context.createRadialGradient(
-		player1.x+squareSize/2,player1.y+squareSize/2,5,
-		player1.x+squareSize/2,player1.y+squareSize/2,
+		player1.aura.x+squareSize/2,player1.aura.y+squareSize/2,5,
+		player1.aura.x+squareSize/2,player1.aura.y+squareSize/2,
 		player1.aura.size);
 	p1gradient.addColorStop(0,"rgba(255,255,255,0.5)");
 	p1gradient.addColorStop(0.5,"rgba(255,150,150,0.5)");
 	p1gradient.addColorStop(1,"rgba(100,100,100,0.01)");
 
 	p2gradient = context.createRadialGradient(
-		player2.x+squareSize/2,player2.y+squareSize/2,5,player2.x+squareSize/2,player2.y+squareSize/2,
+		player2.aura.x+squareSize/2,player2.aura.y+squareSize/2,5,
+		player2.aura.x+squareSize/2,player2.aura.y+squareSize/2,
 		player2.aura.size);
 	p2gradient.addColorStop(0,"rgba(255,255,255,0.5)");
 	p2gradient.addColorStop(0.5,"rgba(150,150,255,0.5)");
