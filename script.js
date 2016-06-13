@@ -14,8 +14,8 @@ var squareSize = 50;
 var xborder = (canvas.width-(squareSize*(Math.floor(canvas.width/squareSize))))/2;
 var yborder = (canvas.height-(squareSize*(Math.floor(canvas.height/squareSize))))/2;
 
-var player1 = new Player(xborder,"rgba(255,0,0,0.3)");
-var player2 = new Player(xborder + squareSize*Math.floor(canvas.width/squareSize-1),"rgba(0,0,255,0.3)");
+var player1 = new Player(xborder,"rgba(255,0,0,0.8)");
+var player2 = new Player(xborder + squareSize*Math.floor(canvas.width/squareSize-1),"rgba(0,0,255,0.8)");
 var p1gradient;
 var p2gradient;
 
@@ -357,6 +357,7 @@ function Player(x,col) {
 	this.y = squareSize*Math.floor((canvas.height/squareSize)/2)+yborder;
 	this.dimention = squareSize-10;
 	this.speed = 25;
+	this.color = col;
 	this.UP = false;
 	this.DOWN = false;
 	this.LEFT = false;
