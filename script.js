@@ -14,8 +14,8 @@ var squareSize = 50;
 var xborder = (canvas.width-(squareSize*(Math.floor(canvas.width/squareSize))))/2;
 var yborder = (canvas.height-(squareSize*(Math.floor(canvas.height/squareSize))))/2;
 
-var player1 = new Player(xborder,"rgba(255,0,0,0.8)");
-var player2 = new Player(xborder + squareSize*Math.floor(canvas.width/squareSize-1),"rgba(0,0,255,0.8)");
+var player1 = new Player(xborder,"rgba(255,0,0,0.5)");
+var player2 = new Player(xborder + squareSize*Math.floor(canvas.width/squareSize-1),"rgba(0,0,255,0.5)");
 var p1gradient;
 var p2gradient;
 
@@ -104,6 +104,8 @@ function drawWorld() {
 	};
 	if (isPlaying) {
 		generateGradientsAura();
+		player1.renderAura();
+		player2.renderAura();
 		BlackHole += 1;
 		player1.update().draw();
 		player2.update().draw();
@@ -355,6 +357,8 @@ function Aura(player) {
 function Player(x,col) {
 	this.x = x;
 	this.y = squareSize*Math.floor((canvas.height/squareSize)/2)+yborder;
+	this.initX = this.x;
+	this.initY = this.y;
 	this.dimention = squareSize-10;
 	this.speed = 25;
 	this.color = col;
@@ -416,6 +420,12 @@ function Player(x,col) {
 		}
 	}
 
+	this.reset = function() {
+		this.x = this.initX;
+		this.y = this.initY;
+		this.aura = new Aura(this);
+	}
+
 	this.renderAura = function() {
 		this.aura.update().draw();
 	}
@@ -428,7 +438,6 @@ function Player(x,col) {
 	}
 
 	this.draw = function() {
-		this.renderAura();
 		context.beginPath();
 		context.fillStyle = this.color;
 		context.fillRect(this.x+5,this.y+5,this.dimention,this.dimention);
