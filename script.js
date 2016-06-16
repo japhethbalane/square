@@ -14,8 +14,10 @@ var squareSize = 50;
 var xborder = (canvas.width-(squareSize*(Math.floor(canvas.width/squareSize))))/2;
 var yborder = (canvas.height-(squareSize*(Math.floor(canvas.height/squareSize))))/2;
 
-var player1 = new Player(xborder,"rgba(255,0,0,0.5)");
-var player2 = new Player(xborder + squareSize*Math.floor(canvas.width/squareSize-1),"rgba(0,0,255,0.5)");
+var player1 = new Player(xborder,
+	"rgba(255,0,0,0.8)");
+var player2 = new Player(xborder + squareSize*Math.floor(canvas.width/squareSize-1),
+	"rgba(0,0,255,0.8)");
 var p1gradient;
 var p2gradient;
 
@@ -25,7 +27,7 @@ var BlackHole = 300;
 
 setInterval(drawWorld, 20);
 
-generateSquare(100);
+generateSquare(300);
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -104,8 +106,8 @@ function drawWorld() {
 	};
 	if (isPlaying) {
 		generateGradientsAura();
-		player1.renderAura();
-		player2.renderAura();
+		// player1.renderAura();
+		// player2.renderAura();
 		BlackHole += 1;
 		player1.update().draw();
 		player2.update().draw();
@@ -120,6 +122,11 @@ function drawWorld() {
 function drawSquareLogo() {
 	var x = canvas.width/2;
 	var y = canvas.height/2 - squareSize/2;
+
+	// var g = context.createLinearGradient(x-110,0,x+110,0);
+	// g.addColorStop(0,"#f00");
+	// g.addColorStop(0.5,"#000");
+	// g.addColorStop(1,"#00f");
 
 	context.beginPath();
 
@@ -162,6 +169,7 @@ function drawSquareLogo() {
 	context.lineTo(x+100+10, y+25);
 
 	context.strokeStyle = "#fff";
+	// context.strokeStyle = g;
 	context.lineWidth = 5;
 	context.lineCap = "round";
 	context.stroke();
@@ -178,13 +186,15 @@ function clearCanvas() {
 		canvas.width/2,canvas.height/2,5,canvas.width/2,canvas.height/2,BlackHole);
 	gradient.addColorStop(0,'#000');
 	gradient.addColorStop(1,'#666');
-	context.fillStyle = gradient;
+	// context.fillStyle = gradient;
+	context.fillStyle = "#001634";
 	context.fillRect(0,0,canvas.width,canvas.height);
 }
 
 function drawGrid() {
 
-	context.strokeStyle = "rgba(0,0,0,1)";
+	// context.strokeStyle = "rgba(0,0,0,1)";
+	context.strokeStyle = "rgba(255,255,255,0.5)";
 
 	context.moveTo(xborder,yborder);
 	context.lineTo(canvas.width-xborder,yborder);
@@ -220,7 +230,8 @@ function Square() {
 	this.x = squareSize*randomBetween(0+1,(Math.floor(canvas.width/squareSize)-1))+xborder;
 	this.y = squareSize*randomBetween(0,Math.floor(canvas.height/squareSize))+yborder;
 	this.dimention = squareSize-10;
-	this.stopTimer = 0;
+	this.stopTimer = 10;
+	this.initTimer = this.stopTimer;
 
 	this.isMoving = false;
 
@@ -289,7 +300,7 @@ function Square() {
 		}
 
 		if (this.isMoving) {
-			this.stopTimer = 0;
+			this.stopTimer = this.initTimer;
 			if (this.UP) {
 				this.y--;
 			}
@@ -309,7 +320,8 @@ function Square() {
 
 	this.draw = function() {
 		context.beginPath();
-		context.fillStyle = "rgba(0,0,0,0.8)";
+		// context.fillStyle = "rgba(0,0,0,0.5)";
+		context.fillStyle = "rgba(255,255,255,0.8)";
 		context.fillRect(this.x+5,this.y+5,this.dimention,this.dimention);
 		context.fill();
 	}
@@ -392,7 +404,6 @@ function Player(x,col) {
 			this.UP = false;this.DOWN = false;this.LEFT = false;this.RIGHT = true;
 		}
 	}
-
 	this.move = function() {
 		if (this.UP) {
 			this.y-=this.speed;
@@ -426,6 +437,17 @@ function Player(x,col) {
 		this.aura = new Aura(this);
 	}
 
+	this.checkIfHit = function() {
+		for (var i = 0; i < squares.length; i++) {
+			// if () {
+				// this.reset();
+			// }
+			if (this.x == squares[i].x && this.y == squares[i].y) {
+				this.reset();
+			}
+		}
+	}
+
 	this.renderAura = function() {
 		this.aura.update().draw();
 	}
@@ -434,6 +456,7 @@ function Player(x,col) {
 		if (this.UP || this.DOWN || this.LEFT || this.RIGHT) {
 			this.move();
 		}
+		this.checkIfHit();
 		return this;
 	}
 
