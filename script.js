@@ -13,7 +13,10 @@ var isPlaying = false;
 var squareSize = 50;
 var xborder = (canvas.width-(squareSize*(Math.floor(canvas.width/squareSize))))/2;
 var yborder = (canvas.height-(squareSize*(Math.floor(canvas.height/squareSize))))/2;
+var maxScore = 5;
+var squareCount = 250;
 
+var bonus = new Bonus();
 var player1 = new Player(xborder,
 	"rgba(255,0,0,0.8)");
 var player2 = new Player(xborder + squareSize*Math.floor(canvas.width/squareSize-1),
@@ -21,11 +24,12 @@ var player2 = new Player(xborder + squareSize*Math.floor(canvas.width/squareSize
 player1.init();
 player2.init();
 
+
 //////////////////////////////////////////////////////////////////////////////
 
 setInterval(drawWorld, 20);
 
-generateSquare(200);
+generateSquare(squareCount);
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -33,24 +37,6 @@ function generateSquare(count) {
 	for (var i = 0; i < count; i++) {
 		squares.push(new Square());
 	};
-}
-
-function generateGradientsAura() {
-	p1gradient = context.createRadialGradient(
-		player1.aura.x+squareSize/2,player1.aura.y+squareSize/2,5,
-		player1.aura.x+squareSize/2,player1.aura.y+squareSize/2,
-		player1.aura.size);
-	p1gradient.addColorStop(0,"rgba(255,255,255,0.5)");
-	p1gradient.addColorStop(0.5,"rgba(255,150,150,0.5)");
-	p1gradient.addColorStop(1,"rgba(100,100,100,0.01)");
-
-	p2gradient = context.createRadialGradient(
-		player2.aura.x+squareSize/2,player2.aura.y+squareSize/2,5,
-		player2.aura.x+squareSize/2,player2.aura.y+squareSize/2,
-		player2.aura.size);
-	p2gradient.addColorStop(0,"rgba(255,255,255,0.5)");
-	p2gradient.addColorStop(0.5,"rgba(150,150,255,0.5)");
-	p2gradient.addColorStop(1,"rgba(100,100,100,0.01)");
 }
 
 canvas.addEventListener("click", function() {
@@ -102,16 +88,31 @@ function drawWorld() {
 	if (!isPlaying) {
 		drawSquareLogo();
 	};
+	checkWin();
 	if (isPlaying) {
 		player1.update().draw();
 		player2.update().draw();
 		for (var i = 0; i < squares.length; i++) {
 			squares[i].update().draw();
 		}
+		bonus.update().draw();
 	};
 }
 
 //////////////////////////////////////////////////////////////////////////////
+
+function checkWin() {
+	if (player1.score == maxScore) {
+		alert("Player 1 wins!");
+		player1.score = player2.score = 0;
+		bonus.reset();
+	}
+	else if (player2.score == maxScore) {
+		alert("Player 2 wins!");
+		player1.score = player2.score = 0;
+		bonus.reset();
+	}
+}
 
 function drawSquareLogo() {
 	var x = canvas.width/2;
@@ -177,9 +178,8 @@ function clearCanvas() {
 }
 
 function drawGrid() {
-
-	// context.strokeStyle = "rgba(0,0,0,1)";
-	context.strokeStyle = "rgba(255,255,255,0.5)";
+	context.strokeStyle = "rgba(0,0,0,1)";
+	// context.strokeStyle = "rgba(255,255,255,0.5)";
 
 	context.moveTo(xborder,yborder);
 	context.lineTo(canvas.width-xborder,yborder);
@@ -215,9 +215,7 @@ function Square() {
 	this.x = squareSize*randomBetween(0+1,(Math.floor(canvas.width/squareSize)-1))+xborder;
 	this.y = squareSize*randomBetween(0,Math.floor(canvas.height/squareSize))+yborder;
 	this.dimention = squareSize-10;
-
 	this.isMoving = false;
-
 	this.UP;this.DOWN;this.LEFT;this.RIGHT;
 	this.UP = this.DOWN = this.LEFT = this.RIGHT = false;
 
@@ -301,11 +299,9 @@ function Square() {
 	}
 
 	this.draw = function() {
-		context.beginPath();
-		// context.fillStyle = "rgba(0,0,0,0.5)";
+		// context.fillStyle = "rgba(0,0,0,0.8)";
 		context.fillStyle = "rgba(255,255,255,0.8)";
 		context.fillRect(this.x+5,this.y+5,this.dimention,this.dimention);
-		context.fill();
 	}
 }
 
@@ -322,7 +318,7 @@ function Player(x,col) {
 	this.LEFT = false;
 	this.RIGHT = false;
 	this.enemy;
-	this.score = ((canvas.width-(xborder*2))/squareSize)/2;
+	this.score = 0;
 
 	this.init = function() {
 		if (player1 == this) {this.enemy = player2;}
@@ -397,12 +393,34 @@ function Player(x,col) {
 		for (var i = 0; i < squares.length; i++) {
 			if (this.x == squares[i].x && this.y == squares[i].y) {
 				this.reset();
+				if (this.score > 0) {this.score--;}
+			}
+		}
+	}
+
+	this.checkIfPoint = function() {
+		if (this.x == (this.enemy).initX) {
+			bonus.reposition();
+			this.reset();
+			this.score++;
+			if (this.score == maxScore) {
+				isPlaying = false;
+			}
+		}
+		if (this.x == bonus.x && this.y == bonus.y) {
+			bonus.reposition();
+			// this.reset();
+			this.score++;
+			if (this.score == maxScore) {
+				isPlaying = false;
 			}
 		}
 	}
 
 	this.drawScore = function() {
-
+		context.font = "18px Arial";
+		context.fillStyle = "#fff";
+		context.fillText(this.score, this.x+20, this.y+32);
 	}
 
 	this.update = function() {
@@ -410,15 +428,45 @@ function Player(x,col) {
 			this.move();
 		}
 		this.checkIfHit();
+		this.checkIfPoint();
 		return this;
 	}
 
 	this.draw = function() {
-		this.drawScore();
 		context.beginPath();
 		context.fillStyle = this.color;
 		context.fillRect(this.x+5,this.y+5,this.dimention,this.dimention);
 		context.fill();
+		this.drawScore();
+	}
+}
+
+function Bonus() {
+	this.x = squareSize*((Math.floor((canvas.width/squareSize)-1)/2))+xborder;
+	this.y = squareSize*(Math.floor((canvas.height/squareSize)/2))+yborder;
+	this.dimention = squareSize-10;
+
+	this.reset = function(){
+		this.x = squareSize*((Math.floor((canvas.width/squareSize)-1)/2))+xborder;
+		this.y = squareSize*(Math.floor((canvas.height/squareSize)/2))+yborder;
+	}
+
+	this.reposition = function() {
+		this.x = squareSize*randomBetween(0+1,(Math.floor(canvas.width/squareSize)-1))+xborder;
+		this.y = squareSize*randomBetween(0,Math.floor(canvas.height/squareSize))+yborder;
+	}
+
+	this.update = function() {
+
+		return this;
+	}
+
+	this.draw = function() {
+		context.fillStyle = "rgba(0,255,0,0.8)";
+		context.fillRect(this.x+5,this.y+5,this.dimention,this.dimention);
+		context.font = "18px Arial";
+		context.fillStyle = "#fff";
+		context.fillText(":)", this.x+20, this.y+32);
 	}
 }
 
