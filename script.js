@@ -18,16 +18,14 @@ var player1 = new Player(xborder,
 	"rgba(255,0,0,0.8)");
 var player2 = new Player(xborder + squareSize*Math.floor(canvas.width/squareSize-1),
 	"rgba(0,0,255,0.8)");
-var p1gradient;
-var p2gradient;
-
-var BlackHole = 300;
+player1.init();
+player2.init();
 
 //////////////////////////////////////////////////////////////////////////////
 
 setInterval(drawWorld, 20);
 
-generateSquare(300);
+generateSquare(200);
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -105,10 +103,6 @@ function drawWorld() {
 		drawSquareLogo();
 	};
 	if (isPlaying) {
-		generateGradientsAura();
-		// player1.renderAura();
-		// player2.renderAura();
-		BlackHole += 1;
 		player1.update().draw();
 		player2.update().draw();
 		for (var i = 0; i < squares.length; i++) {
@@ -178,15 +172,6 @@ function drawSquareLogo() {
 }
 
 function clearCanvas() {
-	// gradient = context.createLinearGradient(0,0,canvas.width,0);
-	// gradient.addColorStop(0,'#211');
-	// gradient.addColorStop(0.5,'#000');
-	// gradient.addColorStop(1,'#112');
-	gradient = context.createRadialGradient(
-		canvas.width/2,canvas.height/2,5,canvas.width/2,canvas.height/2,BlackHole);
-	gradient.addColorStop(0,'#000');
-	gradient.addColorStop(1,'#666');
-	// context.fillStyle = gradient;
 	context.fillStyle = "#001634";
 	context.fillRect(0,0,canvas.width,canvas.height);
 }
@@ -230,8 +215,6 @@ function Square() {
 	this.x = squareSize*randomBetween(0+1,(Math.floor(canvas.width/squareSize)-1))+xborder;
 	this.y = squareSize*randomBetween(0,Math.floor(canvas.height/squareSize))+yborder;
 	this.dimention = squareSize-10;
-	this.stopTimer = 10;
-	this.initTimer = this.stopTimer;
 
 	this.isMoving = false;
 
@@ -260,20 +243,19 @@ function Square() {
 		}
 
 		if (!this.isMoving) {
-			this.stopTimer--;
-		}
-		if (!this.isMoving && this.stopTimer <= 0) {
 			var decide = randomBetween(0,4);
 
 			if (this.y-5-squareSize < 0) {
 				decide = this.tri(1,2,3);
-				if (this.x-5-squareSize < xborder || this.x-5+squareSize*2 >= canvas.width-xborder-squareSize) {
+				if (this.x-5-squareSize < xborder 
+					|| this.x-5+squareSize*2 >= canvas.width-xborder-squareSize) {
 					decide = 1;
 				}
 			}
 			else if (this.y-5+squareSize*2 >= canvas.height-yborder) {
 				decide = this.tri(0,2,3);
-				if (this.x-5-squareSize < xborder || this.x-5+squareSize*2 >= canvas.width-xborder-squareSize) {
+				if (this.x-5-squareSize < xborder 
+					|| this.x-5+squareSize*2 >= canvas.width-xborder-squareSize) {
 					decide = 0;
 				}
 			}
@@ -296,11 +278,11 @@ function Square() {
 			else if (decide == 3) {
 				this.RIGHT = true;
 			}
-			this.isMoving = true;
+			if (randomBetween(1,100)==1) {
+			this.isMoving = true;}
 		}
 
 		if (this.isMoving) {
-			this.stopTimer = this.initTimer;
 			if (this.UP) {
 				this.y--;
 			}
@@ -327,45 +309,6 @@ function Square() {
 	}
 }
 
-function Aura(player) {
-	this.player = player;
-	this.x = this.player.x;
-	this.y = this.player.y;
-	this.size = 300;
-	this.gradient = "green";
-
-	this.update = function() {
-		if (this.player.x > this.x) {
-			this.x++;
-		}
-		if (this.player.x < this.x) {
-			this.x--;
-		}
-		if (this.player.y > this.y) {
-			this.y++;
-		}
-		if (this.player.y < this.y) {
-			this.y--;
-		}
-
-		if (this.player == player1) {
-			this.gradient = p1gradient;
-		}
-		else if (this.player == player2) {
-			this.gradient = p2gradient;
-		}
-
-		return this;
-	}
-
-	this.draw = function() {
-		context.beginPath();
-		context.fillStyle = this.gradient;
-		context.arc(this.x+squareSize/2,this.y+squareSize/2,this.size,Math.PI*2,false);
-		context.fill();
-	}
-}
-
 function Player(x,col) {
 	this.x = x;
 	this.y = squareSize*Math.floor((canvas.height/squareSize)/2)+yborder;
@@ -378,30 +321,44 @@ function Player(x,col) {
 	this.DOWN = false;
 	this.LEFT = false;
 	this.RIGHT = false;
-	this.aura = new Aura(this);
+	this.enemy;
+	this.score = ((canvas.width-(xborder*2))/squareSize)/2;
+
+	this.init = function() {
+		if (player1 == this) {this.enemy = player2;}
+		else {this.enemy = player1;}
+	}
 
 	this.moveUP = function() {
 		if ((this.y-yborder)%squareSize == 0 && (this.x-xborder)%squareSize == 0
 				&& this.y-yborder > 0) {
 			this.UP = true;this.DOWN = false;this.LEFT = false;this.RIGHT = false;
+			if ((this.enemy).y == this.y-squareSize
+				&& (this.enemy).x == this.x) {this.UP=false;}
 		}
 	}
 	this.moveDOWN = function() {
 		if ((this.y-yborder)%squareSize == 0 && (this.x-xborder)%squareSize == 0
 				&& this.y+yborder+squareSize < canvas.height) {
 			this.UP = false;this.DOWN = true;this.LEFT = false;this.RIGHT = false;
+			if ((this.enemy).y == this.y+squareSize
+				&& (this.enemy).x == this.x) {this.DOWN=false;}
 		}
 	}
 	this.moveLEFT = function() {
 		if ((this.y-yborder)%squareSize == 0 && (this.x-xborder)%squareSize == 0
 				&& this.x-xborder > 0) {
 			this.UP = false;this.DOWN = false;this.LEFT = true;this.RIGHT = false;
+			if ((this.enemy).x == this.x-squareSize
+				&& (this.enemy).y == this.y) {this.LEFT=false;}
 		}
 	}
 	this.moveRIGHT = function() {
 		if ((this.y-yborder)%squareSize == 0 && (this.x-xborder)%squareSize == 0
 				&& this.x+xborder+squareSize < canvas.width) {
 			this.UP = false;this.DOWN = false;this.LEFT = false;this.RIGHT = true;
+			if ((this.enemy).x == this.x+squareSize
+				&& (this.enemy).y == this.y) {this.RIGHT=false;}
 		}
 	}
 	this.move = function() {
@@ -434,22 +391,18 @@ function Player(x,col) {
 	this.reset = function() {
 		this.x = this.initX;
 		this.y = this.initY;
-		this.aura = new Aura(this);
 	}
 
 	this.checkIfHit = function() {
 		for (var i = 0; i < squares.length; i++) {
-			// if () {
-				// this.reset();
-			// }
 			if (this.x == squares[i].x && this.y == squares[i].y) {
 				this.reset();
 			}
 		}
 	}
 
-	this.renderAura = function() {
-		this.aura.update().draw();
+	this.drawScore = function() {
+
 	}
 
 	this.update = function() {
@@ -461,6 +414,7 @@ function Player(x,col) {
 	}
 
 	this.draw = function() {
+		this.drawScore();
 		context.beginPath();
 		context.fillStyle = this.color;
 		context.fillRect(this.x+5,this.y+5,this.dimention,this.dimention);
