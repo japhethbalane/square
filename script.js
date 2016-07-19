@@ -415,6 +415,7 @@ function Player(x,col) {
 				isPlaying = false;
 			}
 		}
+		if (!isPlaying) {this.reset();}
 	}
 
 	this.drawScore = function() {
