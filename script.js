@@ -173,13 +173,13 @@ function drawSquareLogo() {
 }
 
 function clearCanvas() {
-	context.fillStyle = "#001634";
+	context.fillStyle = "#000";
 	context.fillRect(0,0,canvas.width,canvas.height);
 }
 
 function drawGrid() {
-	context.strokeStyle = "rgba(0,0,0,1)";
-	// context.strokeStyle = "rgba(255,255,255,0.5)";
+	// context.strokeStyle = "rgba(0,0,0,1)";
+	context.strokeStyle = "rgba(255,255,255,0.1)";
 
 	context.moveTo(xborder,yborder);
 	context.lineTo(canvas.width-xborder,yborder);
@@ -462,10 +462,10 @@ function Bonus() {
 	}
 
 	this.draw = function() {
-		context.fillStyle = "rgba(0,255,0,0.8)";
+		context.fillStyle = "rgba(255,255,255,0)";
 		context.fillRect(this.x+5,this.y+5,this.dimention,this.dimention);
 		context.font = "18px Arial";
-		context.fillStyle = "#fff";
+		context.fillStyle = "#000";
 		context.fillText(":)", this.x+20, this.y+32);
 	}
 }
