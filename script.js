@@ -13,10 +13,11 @@ var isPlaying = false;
 var squareSize = 50;
 var xborder = (canvas.width-(squareSize*(Math.floor(canvas.width/squareSize))))/2;
 var yborder = (canvas.height-(squareSize*(Math.floor(canvas.height/squareSize))))/2;
-var maxScore = 5;
+var maxScore = 16;
 var squareCount = 250;
+var bonusCount = 4;
 
-var bonus = new Bonus();
+var bonuses = [];
 var player1 = new Player(xborder,
 	"rgba(255,0,0,0.8)");
 var player2 = new Player(xborder + squareSize*Math.floor(canvas.width/squareSize-1),
@@ -30,12 +31,19 @@ player2.init();
 setInterval(drawWorld, 20);
 
 generateSquare(squareCount);
+generateBonuses(bonusCount);
 
 //////////////////////////////////////////////////////////////////////////////
 
 function generateSquare(count) {
 	for (var i = 0; i < count; i++) {
 		squares.push(new Square());
+	};
+}
+
+function generateBonuses(count) {
+	for (var i = 0; i < count; i++) {
+		bonuses.push(new Bonus());
 	};
 }
 
@@ -95,19 +103,21 @@ function drawWorld() {
 		for (var i = 0; i < squares.length; i++) {
 			squares[i].update().draw();
 		}
-		bonus.update().draw();
+		for (var i = 0; i < bonuses.length; i++) {
+			bonuses[i].update().draw();
+		}
 	};
 }
 
 //////////////////////////////////////////////////////////////////////////////
 
 function checkWin() {
-	if (player1.score == maxScore) {
+	if (player1.score >= maxScore) {
 		alert("Player 1 wins!");
 		player1.score = player2.score = 0;
 		bonus.reset();
 	}
-	else if (player2.score == maxScore) {
+	else if (player2.score >= maxScore) {
 		alert("Player 2 wins!");
 		player1.score = player2.score = 0;
 		bonus.reset();
@@ -400,20 +410,23 @@ function Player(x,col) {
 
 	this.checkIfPoint = function() {
 		if (this.x == (this.enemy).initX) {
-			bonus.reposition();
+			for (var i = 0; i < bonuses.length; i++) {
+				bonuses[i].reposition();
+			}
 			this.reset();
-			this.score++;
+			this.score+=3;
 			if (this.score == maxScore) {
 				isPlaying = false;
 			}
 		}
-		if (this.x == bonus.x && this.y == bonus.y) {
-			bonus.reposition();
-			// this.reset();
-			this.score++;
-			if (this.score == maxScore) {
-				isPlaying = false;
+		for (var i = 0; i < bonuses.length; i++) {
+			if (this.x == bonuses[i].x && this.y == bonuses[i].y) {
+				bonuses[i].reposition();
+				this.score++;
+				if (this.score == maxScore) {
+					isPlaying = false;
 			}
+		}
 		}
 		if (!isPlaying) {this.reset();}
 	}
@@ -443,8 +456,10 @@ function Player(x,col) {
 }
 
 function Bonus() {
-	this.x = squareSize*((Math.floor((canvas.width/squareSize)-1)/2))+xborder;
-	this.y = squareSize*(Math.floor((canvas.height/squareSize)/2))+yborder;
+	// this.x = squareSize*((Math.floor((canvas.width/squareSize)-1)/2))+xborder; // center
+	// this.y = squareSize*(Math.floor((canvas.height/squareSize)/2))+yborder;
+	this.x = squareSize*randomBetween(0+3,(Math.floor(canvas.width/squareSize)-3))+xborder;
+	this.y = squareSize*randomBetween(0,Math.floor(canvas.height/squareSize))+yborder;
 	this.dimention = squareSize-10;
 
 	this.reset = function(){
